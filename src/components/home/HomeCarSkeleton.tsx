@@ -4,11 +4,11 @@ export default function HomeCarSkeleton() {
   return (
     <section
       className="
-        grid
-        grid-cols-2
-        gap-3
+        grid grid-cols-2
+        gap-3 sm:gap-5
         sm:grid-cols-3
         lg:grid-cols-4
+        w-full
       "
     >
       {Array.from({ length: 8 }).map((_, i) => (

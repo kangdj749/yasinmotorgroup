@@ -1,12 +1,9 @@
 import "./globals.css";
 import type { Metadata } from "next";
 
-
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-
 import MobileBottomNav from "@/components/MobileBottomNav";
-
 
 export const metadata: Metadata = {
   title: {
@@ -24,22 +21,17 @@ export default function RootLayout({
   return (
     <html lang="id" suppressHydrationWarning>
       <body className="min-h-screen bg-background text-foreground font-body antialiased">
+        {/* GLOBAL NAVBAR */}
+        <Navbar />
 
-          {/* ✅ GLOBAL NAVBAR */}
-          <Navbar />
+        {/* PAGE CONTENT */}
+        <main>{children}</main>
 
-          {/* PAGE CONTENT */}
-          <main className="max-w-6xl mx-auto px-4 sm:px-6 space-y-6">
-            {children}
-            <MobileBottomNav />
-          </main>
+        {/* MOBILE NAV — FIXED, OUTSIDE CONTAINER */}
+        <MobileBottomNav />
 
-          {/* OPTIONAL GLOBAL FOOTER */}
-          <Footer />
-
-       
-   
-        
+        {/* FOOTER */}
+        <Footer />
       </body>
     </html>
   );
