@@ -1,5 +1,5 @@
 import AdminCarCreate from "@/components/admin/AdminCarCreate";
-import { CarFormFooter } from "@/components/admin/CarFormFooter";
+
 
 
 export default function NewCarPage() {
