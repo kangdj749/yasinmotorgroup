@@ -1,23 +1,24 @@
-// src/app/blog/[slug]/page.tsx
-
+// app/blog/[slug]/page.tsx
 import { notFound } from "next/navigation";
-import { getAllPosts } from "@/lib/blog/getPosts";
+import ReactMarkdown from "react-markdown";
+import { getPostBySlug } from "@/lib/blog/getPostBySlug";
 
-export default function BlogDetailPage({
+export default async function BlogDetailPage({
   params,
 }: {
   params: { slug: string };
 }) {
-  const posts = getAllPosts();
-  const post = posts.find((p) => p.slug === params.slug);
-
+  const post = await getPostBySlug(params.slug);
   if (!post) return notFound();
 
   return (
     <main className="container py-6 space-y-4">
       <h1 className="text-2xl font-bold">{post.title}</h1>
-      <article className="prose">
-        {post.content}
+
+      <article className="prose max-w-none">
+        <ReactMarkdown>
+          {post.content}
+        </ReactMarkdown>
       </article>
     </main>
   );

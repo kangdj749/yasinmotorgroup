@@ -4,33 +4,61 @@ import Image from "next/image";
 import Link from "next/link";
 import { MapPin } from "lucide-react";
 import { Car } from "@/types/car";
+import { cn } from "@/lib/utils";
 
 type Props = {
   car: Car;
+  variant?: "default" | "promo";
 };
 
-export default function CarCard({ car }: Props) {
+export default function CarCard({
+  car,
+  variant = "default",
+}: Props) {
   return (
     <article
-      className="
+      className={cn(
+        `
         group relative
         bg-card border border-border
         rounded-2xl overflow-hidden
         shadow-card hover:shadow-soft
         transition
-      "
+        `,
+        variant === "promo" &&
+          "ring-2 ring-red-500/70 shadow-red-200/40"
+      )}
     >
       <Link href={`/mobil/${car.slug}`} className="block">
-        {/* BRAND BADGE */}
-        {car.brand && (
+        {/* PROMO BADGE */}
+        {variant === "promo" && (
           <span
             className="
-              absolute top-2 left-2 z-10
-              bg-primary/90 text-primary-foreground
-              text-[10px] font-semibold
+              absolute top-2 left-2 z-20
+              bg-red-600 text-white
+              text-[10px] font-bold
               px-2 py-1 rounded-md
               shadow
             "
+          >
+            PROMO
+          </span>
+        )}
+
+        {/* BRAND BADGE */}
+        {car.brand && (
+          <span
+            className={cn(
+              `
+              absolute top-2 z-10
+              text-[10px] font-semibold
+              px-2 py-1 rounded-md
+              shadow
+              `,
+              variant === "promo"
+                ? "left-2 mt-6 bg-primary/90 text-primary-foreground"
+                : "left-2 bg-primary/90 text-primary-foreground"
+            )}
           >
             {car.brand}
           </span>

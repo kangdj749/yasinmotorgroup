@@ -1,26 +1,12 @@
 // src/lib/data/getShowrooms.ts
 
-import { getAllCars } from "@/lib/data/cars";
-import { slugify } from "@/lib/utils/slugify";
-
-export type Showroom = {
-  name: string;
-  slug: string;
-};
+import { getSheetRows } from "@/lib/google/google-sheets";
+import { Showroom } from "@/types/showroom";
 
 export async function getShowrooms(): Promise<Showroom[]> {
-  const cars = await getAllCars();
+  const rows = await getSheetRows<Showroom>("showroom");
 
-  const map = new Map<string, Showroom>();
-
-  cars.forEach((car) => {
-    if (!map.has(car.showroomId)) {
-      map.set(car.showroomId, {
-        name: car.showroomId,
-        slug: slugify(car.showroomId),
-      });
-    }
-  });
-
-  return Array.from(map.values());
+  return rows
+    .filter((s) => s.isActive)
+    .sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
 }

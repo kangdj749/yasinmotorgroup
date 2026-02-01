@@ -1,7 +1,18 @@
+// src/types/showroom.ts
+
 export type Showroom = {
-  id: string;
   slug: string;
   name: string;
+
+  description?: string;
+  address?: string;
   city?: string;
-  createdAt?: string;
+  mapsUrl?: string;
+  phone?: string;
+
+  isActive: boolean;
+  order?: number;
+
+  seoTitle?: string;
+  seoDescription?: string;
 };

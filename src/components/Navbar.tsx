@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, Search, Car, Building2, BookOpen } from "lucide-react";
+import { Menu, X, Car, Building2, BookOpen } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -17,16 +17,6 @@ const NAV_ITEMS = [
 export default function Navbar() {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
-  const [search, setSearch] = useState("");
-
-  function handleSearch(e: React.FormEvent) {
-    e.preventDefault();
-    if (!search.trim()) return;
-
-    router.push(`/mobil?q=${encodeURIComponent(search)}`);
-    setSearch("");
-    setIsOpen(false);
-  }
 
   return (
     <header className="sticky top-0 z-40 bg-background/80 backdrop-blur border-b border-border">
@@ -36,7 +26,7 @@ export default function Navbar() {
           <div className="relative w-9 h-9">
             <Image
               src="/logo.png"
-              alt="Showroom Mobil Bekas"
+              alt="Yasin Motor Group - Showroom Mobil Bekas"
               fill
               className="object-contain"
               priority
@@ -60,30 +50,14 @@ export default function Navbar() {
           ))}
         </nav>
 
-        {/* RIGHT */}
-        <div className="flex items-center gap-3">
-          {/* SEARCH */}
-          <form
-            onSubmit={handleSearch}
-            className="hidden md:flex items-center gap-2 bg-card border border-border rounded-full px-4 py-1.5"
-          >
-            <Search size={16} className="text-muted-foreground" />
-            <input
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Cari mobil…"
-              className="bg-transparent text-sm outline-none w-36"
-            />
-          </form>
-
-          {/* MOBILE MENU */}
-          <button
-            onClick={() => setIsOpen((p) => !p)}
-            className="md:hidden text-primary"
-          >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
+        {/* MOBILE TOGGLE */}
+        <button
+          onClick={() => setIsOpen((p) => !p)}
+          className="md:hidden text-primary"
+          aria-label="Toggle menu"
+        >
+          {isOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
       </div>
 
       {/* MOBILE DRAWER */}
@@ -95,26 +69,13 @@ export default function Navbar() {
             exit={{ opacity: 0, y: -8 }}
             className="md:hidden bg-background border-b border-border"
           >
-            <div className="p-5 space-y-5">
-              <form
-                onSubmit={handleSearch}
-                className="flex items-center gap-2 bg-card border border-border rounded-xl px-3 py-2"
-              >
-                <Search size={16} />
-                <input
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Cari mobil…"
-                  className="flex-1 bg-transparent outline-none text-sm"
-                />
-              </form>
-
+            <div className="p-5 space-y-4">
               {NAV_ITEMS.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
                   onClick={() => setIsOpen(false)}
-                  className="block font-medium hover:text-primary"
+                  className="block font-medium text-base hover:text-primary"
                 >
                   {item.label}
                 </Link>

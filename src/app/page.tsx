@@ -10,6 +10,12 @@ import HomeCarSkeleton from "@/components/home/HomeCarSkeleton";
 import PaginationServer from "@/components/home/PaginationServer";
 import PaginationSkeleton from "@/components/home/PaginationSkeleton";
 
+import PromoSection from "@/components/promo/PromoSection";
+import PromoDetailSkeleton from "@/components/promo/PromoDetailSkeleton";
+
+/* ✅ ISR: refresh promo + mobil tiap 5 menit */
+export const revalidate = 300;
+
 export default async function HomePage({
   searchParams,
 }: {
@@ -28,12 +34,11 @@ export default async function HomePage({
         max-w-7xl mx-auto
         px-3 sm:px-6 lg:px-8
         pt-5 sm:pt-10
-        pb-28 md:pb-10   /* 👈 PENTING */
+        pb-28 md:pb-10
         space-y-8
       "
     >
-
-      {/* HERO */}
+      {/* ================= HERO ================= */}
       <header className="space-y-2">
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
           Mobil Bekas Berkualitas
@@ -43,17 +48,22 @@ export default async function HomePage({
         </p>
       </header>
 
-      {/* BRAND FILTER */}
+      {/* ================= PROMO ================= */}
+      <Suspense fallback={<div className="h-32" />}>
+        <PromoSection />
+      </Suspense>
+
+      {/* ================= BRAND FILTER ================= */}
       <Suspense fallback={<BrandTabsSkeleton />}>
         <BrandTabs brands={brands} />
       </Suspense>
 
-      {/* GRID */}
+      {/* ================= GRID ================= */}
       <Suspense fallback={<HomeCarSkeleton />}>
         <HomeCarGrid brand={brand} page={page} />
       </Suspense>
 
-      {/* PAGINATION */}
+      {/* ================= PAGINATION ================= */}
       <Suspense fallback={<PaginationSkeleton />}>
         <PaginationServer brand={brand} page={page} />
       </Suspense>

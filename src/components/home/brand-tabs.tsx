@@ -29,7 +29,7 @@ const BrandTabs: React.FC<BrandTabsProps> = ({ brands }) => {
     <div className="flex gap-2 overflow-x-auto pb-2">
       <button
         onClick={() => selectBrand("all")}
-        className={`px-4 py-2 rounded-full text-sm border transition ${
+        className={`px-4 py-2 rounded-full text-sm border border-border transition ${
           !activeBrand
             ? "bg-primary text-white"
             : "bg-background"
@@ -42,7 +42,7 @@ const BrandTabs: React.FC<BrandTabsProps> = ({ brands }) => {
         <button
           key={brand}
           onClick={() => selectBrand(brand)}
-          className={`px-4 py-2 rounded-full text-sm border whitespace-nowrap transition ${
+          className={`px-4 py-2 rounded-full text-sm border border-border whitespace-nowrap transition ${
             activeBrand === brand
               ? "bg-primary text-white"
               : "bg-background"

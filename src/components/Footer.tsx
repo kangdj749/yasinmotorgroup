@@ -23,7 +23,7 @@ export default function Footer() {
               <Phone size={16} /> <span>0812-3456-7890</span>
             </li>
             <li className="flex items-center gap-2">
-              <Mail size={16} /> <span>admin@mobilbekas.id</span>
+              <Mail size={16} /> <span>admin@yasinmotorgroup.com</span>
             </li>
             <li className="flex items-center gap-2">
               <MapPin size={16} /> <span>Bandung, Jawa Barat</span>
@@ -46,7 +46,7 @@ export default function Footer() {
       </div>
 
       <p className="text-center text-xs text-muted-foreground mt-10">
-        © {new Date().getFullYear()} MobilBekas.id — All rights reserved.
+        © {new Date().getFullYear()} YasinMotorGroup.com — All rights reserved.
       </p>
     </footer>
   );
