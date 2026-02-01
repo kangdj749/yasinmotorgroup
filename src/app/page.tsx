@@ -49,7 +49,7 @@ export default async function HomePage({
       </header>
 
       {/* ================= PROMO ================= */}
-      <Suspense fallback={<div className="h-32" />}>
+      <Suspense fallback={<PromoDetailSkeleton/>}>
         <PromoSection />
       </Suspense>
 
