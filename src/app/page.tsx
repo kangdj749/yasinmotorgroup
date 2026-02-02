@@ -100,7 +100,7 @@ export default async function HomePage({
             </span>
             <div className="flex items-center gap-1 mt-0.5">
               <span className="text-blue-500">✔</span>
-              <span>Akun WhatsApp Bisnis (Centang Biru)</span>
+              <span>Akun WhatsApp Bisnis</span>
             </div>
           </div>
         </div>

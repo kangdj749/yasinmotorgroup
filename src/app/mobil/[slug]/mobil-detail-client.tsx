@@ -249,11 +249,11 @@ export default function MobilDetailClient({
             >
             <path d="M16 .5C7.4.5.5 7.4.5 16c0 2.8.7 5.5 2.2 7.9L.3 31.5l7.8-2.1c2.3 1.3 5 2 7.9 2 8.6 0 15.5-6.9 15.5-15.5S24.6.5 16 .5zM16 28c-2.6 0-5-.7-7.2-2l-.5-.3-4.6 1.2 1.2-4.5-.3-.5c-1.3-2.1-2-4.6-2-7.2C2.6 8.6 8.6 2.6 16 2.6S29.4 8.6 29.4 16 23.4 28 16 28z" />
             </svg>
-            Tanya Unit via WhatsApp
+            TANYA UNIT DI WHATSAPP
         </a>
 
         <p className="text-xs text-muted-foreground text-center mt-2">
-            Admin showroom akan membalas langsung
+            Team TM akan membalas langsung
         </p>
         </div>
 
