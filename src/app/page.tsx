@@ -41,10 +41,10 @@ export default async function HomePage({
       {/* ================= HERO ================= */}
       <header className="space-y-2">
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
-          Jual Beli Mobil Bekas Berkualitas
+          JUAL BELI MOBIL BEKAS BERKUALITAS
         </h1>
         <p className="text-sm sm:text-base text-muted-foreground max-w-xl">
-          Melayani Proses Cash & Kredit . Tukar Tambah
+          Melayani Proses Cash & Kredit . Tukar Tambah Seluruh Jawa Barat
         </p>
       </header>
 
