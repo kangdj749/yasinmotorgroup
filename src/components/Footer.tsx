@@ -20,7 +20,7 @@ export default function Footer() {
           <h4 className="font-semibold mb-3">Kontak</h4>
           <ul className="space-y-2 text-sm">
             <li className="flex items-center gap-2">
-              <Phone size={16} /> <span>0812-3456-7890</span>
+              <Phone size={16} /> <span>0823-7929-6878</span>
             </li>
             <li className="flex items-center gap-2">
               <Mail size={16} /> <span>admin@yasinmotorgroup.com</span>
