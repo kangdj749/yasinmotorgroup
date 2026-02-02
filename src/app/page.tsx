@@ -41,10 +41,10 @@ export default async function HomePage({
       {/* ================= HERO ================= */}
       <header className="space-y-2">
         <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
-          Mobil Bekas Berkualitas
+          Jual Beli Mobil Bekas Berkualitas
         </h1>
         <p className="text-sm sm:text-base text-muted-foreground max-w-xl">
-          DP ringan, cicilan fleksibel, proses cepat & transparan.
+          Melayani Proses Cash & Kredit . Tukar Tambah
         </p>
       </header>
 
