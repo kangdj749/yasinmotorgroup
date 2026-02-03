@@ -1,5 +1,6 @@
 // src/lib/data/cars.ts
 import { Car } from "@/types/car";
+import { safeJsonParse } from "@/lib/utils/json";
 
 /* ===============================
    CONFIG
@@ -13,18 +14,23 @@ const OPENSHEET_URL = `https://opensheet.elk.sh/${SHEET_ID}/${TAB_NAME}`;
 ================================ */
 function normalizeCar(row: any): Car {
   return {
-    id: row.id,
-    slug: row.slug,
-    title: row.title,
-    description: row.description,
-    brand: row.brand,
-    showroomId: row.showroomId,
-    showroomName: row.showroomName,
+    id: String(row.id),
+    slug: String(row.slug),
+    title: String(row.title),
+    description: row.description ?? "",
+    brand: row.brand ?? "",
+    showroomId: row.showroomId ?? "",
+    showroomName: row.showroomName ?? "",
+
     dp: Number(row.dp) || 0,
     installment: Number(row.installment) || 0,
-    tenor: row.tenor || "",
-    image: row.image,
-    gallery: row.gallery ? JSON.parse(row.gallery) : [],
+    tenor: row.tenor ?? "",
+
+    image: row.image ?? "",
+
+    // ✅ FIX UTAMA (ANTI CRASH)
+    gallery: safeJsonParse<string[]>(row.gallery, []),
+
     status: row.status || "available",
     createdAt: row.createdAt,
   };
