@@ -20,7 +20,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="id" suppressHydrationWarning>
-      <body className="min-h-screen bg-background text-foreground font-body antialiased">
+      <body className="min-h-screen bg-white text-foreground font-body antialiased">
+
         {/* GLOBAL NAVBAR */}
         <Navbar />
 
