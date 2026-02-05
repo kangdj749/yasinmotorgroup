@@ -10,7 +10,7 @@ export default async function PromoSection() {
   // ⛑️ JANGAN SILENT FAIL
   if (!data) {
     return (
-      <section className="rounded-3xl border p-4 sm:p-6">
+      <section className="rounded-3xl border border-border p-4 sm:p-6">
         <p className="text-sm text-muted-foreground">
           Saat ini belum ada promo aktif.
         </p>

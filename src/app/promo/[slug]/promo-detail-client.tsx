@@ -31,6 +31,7 @@ export default function PromoDetailClient({
         max-w-7xl mx-auto
         px-4
         pt-6
+        border border-border
         pb-32 sm:pb-10
         space-y-8
       "
