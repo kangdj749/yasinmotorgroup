@@ -95,6 +95,7 @@ export default function CarCard({
             decoding="async"
             placeholder="blur"
             blurDataURL="/blur-car.png"
+            unoptimized
             className="
               object-cover
               transition-transform duration-500
@@ -102,17 +103,6 @@ export default function CarCard({
             "
           />
 
-          <Image
-            src={car.image || "/placeholder-car.png"}
-            alt={car.title}
-            fill
-            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-            className="
-              object-cover
-              transition-transform duration-500
-              group-hover:scale-105
-            "
-          />
         </div>
 
         {/* CONTENT */}
