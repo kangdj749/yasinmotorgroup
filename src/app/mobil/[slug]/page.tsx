@@ -34,34 +34,36 @@ export async function generateMetadata({
     car.description?.slice(0, 155) ||
     `Jual ${car.title} dengan DP ringan & cicilan terjangkau. Unit tersedia di showroom ${car.showroomName}.`;
 
+  const lcpImage = cloudinaryImage(car.image, "detail");
+
   return {
-  title,
-  description,
-
-  alternates: {
-    canonical: buildCarUrl(car),
-  },
-
-  openGraph: {
     title,
     description,
-    type: "article",
-    url: buildCarUrl(car),
-    images: [
-      {
-        url: cloudinaryImage(car.image, "detail"),
-        width: 1200,
-        height: 630,
-        alt: car.title,
-      },
-    ],
-  },
 
-  other: {
-    "preload-lcp-image": cloudinaryImage(car.image, "detail"),
-  },
-};
+    alternates: {
+      canonical: buildCarUrl(car),
+    },
 
+    openGraph: {
+      title,
+      description,
+      type: "article",
+      url: buildCarUrl(car),
+      images: [
+        {
+          url: lcpImage,
+          width: 1200,
+          height: 630,
+          alt: car.title,
+        },
+      ],
+    },
+
+    // 🔥 INI YANG BIKIN PRELOAD MASUK <head>
+    other: {
+      "preload-lcp-image": lcpImage,
+    },
+  };
 }
 
 /* ================= PAGE ================= */

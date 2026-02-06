@@ -20,15 +20,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="id" suppressHydrationWarning>
+      <head />
       <body className="min-h-screen bg-white text-foreground font-body antialiased">
-
         {/* GLOBAL NAVBAR */}
         <Navbar />
 
         {/* PAGE CONTENT */}
         <main>{children}</main>
 
-        {/* MOBILE NAV — FIXED, OUTSIDE CONTAINER */}
+        {/* MOBILE NAV */}
         <MobileBottomNav />
 
         {/* FOOTER */}
