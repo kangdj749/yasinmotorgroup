@@ -5,6 +5,7 @@ import Link from "next/link";
 import { MapPin } from "lucide-react";
 import { Car } from "@/types/car";
 import { cn } from "@/lib/utils";
+import { buildCarUrl } from "@/lib/routes/car";
 
 type Props = {
   car: Car;
@@ -29,7 +30,7 @@ export default function CarCard({
           "ring-2 ring-red-500/70 shadow-red-200/40"
       )}
     >
-      <Link href={`/mobil/${car.slug}`} className="block">
+      <Link href={buildCarUrl(car)} className="block">
         {/* PROMO BADGE */}
         {variant === "promo" && (
           <span

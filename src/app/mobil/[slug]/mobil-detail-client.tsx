@@ -13,6 +13,7 @@ import {
 import { Car } from "@/types/car";
 import CarCard from "@/components/car/car-card";
 import Pagination from "@/components/ui/pagination";
+import { buildCarUrl } from "@/lib/routes/car";
 
 //type Props = {
 //  car: Car;
@@ -280,7 +281,7 @@ export default function MobilDetailClient({
           <Pagination
             currentPage={allCarsPagination.currentPage}
             totalPages={allCarsPagination.totalPages}
-            basePath={`/mobil/${car.slug}`}
+            basePath={buildCarUrl(car)}
           />
         )}
       </div>

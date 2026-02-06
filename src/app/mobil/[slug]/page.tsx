@@ -7,6 +7,7 @@ import { paginate } from "@/lib/pagination/paginate";
 
 import MobilDetailClient from "./mobil-detail-client";
 import MobilDetailSkeleton from "./mobil-detail-skeleton";
+import { buildCarUrl } from "@/lib/routes/car";
 
 /* ================= SEO METADATA ================= */
 export async function generateMetadata({
@@ -36,14 +37,14 @@ export async function generateMetadata({
     description,
 
     alternates: {
-      canonical: `/mobil/${car.slug}`,
+      canonical: buildCarUrl(car),
     },
 
     openGraph: {
       title,
       description,
       type: "article",
-      url: `/mobil/${car.slug}`,
+      url: buildCarUrl(car),
       images: [
         {
           url: car.image,
@@ -100,6 +101,8 @@ export default async function MobilDetailPage({
 
   const allCarsPagination = paginate(filteredCars, page, 12);
 
+  const carUrl = `${process.env.NEXT_PUBLIC_SITE_URL}${buildCarUrl(car)}`;
+
   return (
     <>
       {/* ================= JSON-LD VEHICLE ================= */}
@@ -118,7 +121,7 @@ export default async function MobilDetailPage({
               availability: "https://schema.org/InStock",
               priceCurrency: "IDR",
               price: car.installment,
-              url: `${process.env.NEXT_PUBLIC_SITE_URL}/mobil/${car.slug}`,
+              url: carUrl,
             },
             seller: {
               "@type": "AutoDealer",

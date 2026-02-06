@@ -67,11 +67,24 @@ export async function getAllCars(): Promise<Car[]> {
    QUERIES
 ================================ */
 export async function getCarBySlug(
-  slug: string
+  slugWithId: string
 ): Promise<Car | null> {
   const cars = await getAllCars();
-  return cars.find((c) => c.slug === slug) ?? null;
+
+  // coba ambil ID dari URL
+  const parts = slugWithId.split("--");
+  const maybeId = parts.length > 1 ? parts[parts.length - 1] : null;
+
+  // 1️⃣ PRIORITAS ID (PALING AMAN)
+  if (maybeId) {
+    const byId = cars.find((c) => c.id === maybeId);
+    if (byId) return byId;
+  }
+
+  // 2️⃣ FALLBACK: slug lama (SEO & link existing)
+  return cars.find((c) => c.slug === slugWithId) ?? null;
 }
+
 
 export async function getCarById(
   id: string

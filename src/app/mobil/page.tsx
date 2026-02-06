@@ -9,6 +9,7 @@ import PaginationServer from "@/components/home/PaginationServer";
 import PaginationSkeleton from "@/components/home/PaginationSkeleton";
 
 import { getAllCars } from "@/lib/data/cars";
+import { buildCarUrl } from "@/lib/routes/car";
 
 /* ================= SEO METADATA ================= */
 export const metadata: Metadata = {
@@ -53,6 +54,8 @@ export default async function MobilPage({ searchParams }: Props) {
     new Set(availableCars.map((c) => c.brand))
   );
 
+ 
+
   /* ================= JSON-LD ================= */
   const jsonLd = {
     "@context": "https://schema.org",
@@ -66,7 +69,7 @@ export default async function MobilPage({ searchParams }: Props) {
     itemListElement: availableCars.slice(0, 12).map((car, index) => ({
       "@type": "ListItem",
       position: index + 1,
-      url: `${process.env.NEXT_PUBLIC_SITE_URL}/mobil/${car.slug}`,
+      url: `${process.env.NEXT_PUBLIC_SITE_URL}${buildCarUrl(car)}`,
       name: car.title,
     })),
   };

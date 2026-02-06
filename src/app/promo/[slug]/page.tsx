@@ -6,6 +6,7 @@ import { getPromoBySlug } from "@/lib/data/getPromoBySlug";
 
 import PromoDetailClient from "./promo-detail-client";
 import PromoDetailSkeleton from "@/components/promo/PromoDetailSkeleton";
+import { buildCarUrl } from "@/lib/routes/car";
 
 /* ================= SEO METADATA ================= */
 export async function generateMetadata({
@@ -64,7 +65,7 @@ export default async function PromoDetailPage({
   if (!data) return notFound();
 
   const { promo, cars } = data;
-
+  
   return (
     <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 space-y-6">
       {/* ================= JSON-LD ================= */}
@@ -88,7 +89,7 @@ export default async function PromoDetailPage({
                   "@type": "Vehicle",
                   name: car.title,
                   brand: car.brand,
-                  url: `${process.env.NEXT_PUBLIC_SITE_URL}/mobil/${car.slug}`,
+                  url: `${process.env.NEXT_PUBLIC_SITE_URL}${buildCarUrl(car)}`,
                 },
               })),
             },
