@@ -14,15 +14,7 @@ import { Car } from "@/types/car";
 import CarCard from "@/components/car/car-card";
 import Pagination from "@/components/ui/pagination";
 import { buildCarUrl } from "@/lib/routes/car";
-
-//type Props = {
-//  car: Car;
-//  related: Car[];
-//  pagination: {
-//    currentPage: number;
-//    totalPages: number;
-//  };
-//};
+import { cloudinaryImage } from "@/lib/utils/cloudinary";
 
 type Props = {
   car: Car;
@@ -41,10 +33,12 @@ type Props = {
   };
 };
 
-
 export default function MobilDetailClient({
   car,
   related,
+  relatedPagination,
+  allCars,
+  brands,
   allCarsPagination,
 }: Props) {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -61,31 +55,36 @@ export default function MobilDetailClient({
     );
   }, [car.image, car.gallery]);
 
+  /* ✅ RESET STATE SAAT MOBIL BERUBAH */
+  useEffect(() => {
+    setActiveIndex(0);
+    setZoom(false);
+  }, [car.id]);
+
   const prevImage = () =>
     setActiveIndex((p) => (p > 0 ? p - 1 : images.length - 1));
   const nextImage = () =>
     setActiveIndex((p) => (p < images.length - 1 ? p + 1 : 0));
 
-
   const waNumber = process.env.NEXT_PUBLIC_WA_NUMBER || "628123456789";
 
-    const waMessage = encodeURIComponent(
+  const waMessage = encodeURIComponent(
     `Halo admin 👋
-    Saya tertarik dengan unit berikut:
+Saya tertarik dengan unit berikut:
 
-    🚗 ${car.title}
-    🏢 Showroom: ${car.showroomName || "-"}
-    💰 DP: Rp ${car.dp.toLocaleString("id-ID")}
-    📆 Angsuran: Rp ${car.installment.toLocaleString("id-ID")} / bulan
-    ⏱ Tenor: ${car.tenor}
+🚗 ${car.title}
+🏢 Showroom: ${car.showroomName || "-"}
+💰 DP: Rp ${car.dp.toLocaleString("id-ID")}
+📆 Angsuran: Rp ${car.installment.toLocaleString("id-ID")} / bulan
+⏱ Tenor: ${car.tenor}
 
-    Link unit:
-    ${typeof window !== "undefined" ? window.location.href : ""}
+Link unit:
+${typeof window !== "undefined" ? window.location.href : ""}
 
-    Mohon info lebih lanjut 🙏`
-    );
+Mohon info lebih lanjut 🙏`
+  );
 
-    const waLink = `https://wa.me/${waNumber}?text=${waMessage}`;
+  const waLink = `https://wa.me/${waNumber}?text=${waMessage}`;
 
   /* ================= RENDER ================= */
   return (
@@ -102,7 +101,7 @@ export default function MobilDetailClient({
           </Link>
         </div>
 
-        {/* ================= IMAGE UTAMA ================= */}
+        {/* IMAGE UTAMA */}
         <div
           className="relative w-full aspect-square overflow-hidden mt-4"
           onTouchStart={(e) =>
@@ -115,22 +114,28 @@ export default function MobilDetailClient({
           }}
         >
           <Image
-            src={images[activeIndex] || "/placeholder.png"}
+            src={cloudinaryImage(images[activeIndex], "detail")}
             alt={car.title}
             fill
             priority={activeIndex === 0}
+            loading={activeIndex === 0 ? "eager" : "lazy"}
+            sizes="(max-width: 768px) 100vw, 720px"
+            decoding="async"
+            placeholder="blur"
+            blurDataURL="/blur-car.png"
             className={`object-cover transition-transform duration-300 ${
               zoom ? "scale-150 cursor-zoom-out" : "cursor-zoom-in"
             }`}
             onClick={() => setZoom((p) => !p)}
           />
 
-          {/* ZOOM ICON */}
+          
+         
+
           <div className="absolute bottom-3 right-3 bg-black/40 text-white p-2 rounded-full">
             <ZoomIn className="w-4 h-4" />
           </div>
 
-          {/* CHEVRON */}
           {images.length > 1 && (
             <>
               <button
@@ -149,7 +154,7 @@ export default function MobilDetailClient({
           )}
         </div>
 
-        {/* ================= GALERI ================= */}
+        {/* GALERI */}
         {images.length > 1 && (
           <div className="px-4 py-3 bg-muted/40">
             <div className="flex gap-3 overflow-x-auto no-scrollbar">
@@ -167,18 +172,24 @@ export default function MobilDetailClient({
                   }`}
                 >
                   <Image
-                    src={img}
-                    alt=""
-                    fill
-                    className="object-cover"
-                  />
+                  src={cloudinaryImage(img, "thumb")}
+                  alt=""
+                  fill
+                  sizes="80px"
+                  loading="lazy"
+                  decoding="async"
+                  placeholder="blur"
+                  blurDataURL="/blur-car.png"
+                  className="object-cover"
+                />
+
                 </button>
               ))}
             </div>
           </div>
         )}
 
-        {/* ================= CONTENT ================= */}
+        {/* CONTENT */}
         <div className="p-6 space-y-6">
           <div>
             <h1 className="text-2xl font-bold">{car.title}</h1>
@@ -194,8 +205,7 @@ export default function MobilDetailClient({
               DP Rp {car.dp.toLocaleString("id-ID")}
             </p>
             <p className="text-sm">
-              Angsuran Rp{" "}
-              {car.installment.toLocaleString("id-ID")} / bulan
+              Angsuran Rp {car.installment.toLocaleString("id-ID")} / bulan
             </p>
             <p className="text-xs text-muted-foreground">
               Tenor {car.tenor}
@@ -226,43 +236,24 @@ export default function MobilDetailClient({
         </div>
       </div>
 
-      {/* ================= CTA WHATSAPP ================= */}
-        <div className="pt-4">
+      {/* CTA WHATSAPP */}
+      <div className="pt-4">
         <a
-            href={waLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="
-            w-full
-            flex items-center justify-center gap-3
-            py-3 rounded-2xl
-            bg-green-500 hover:bg-green-600
-            text-white font-semibold
-            shadow-lg
-            transition
-            "
+          href={waLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full flex items-center justify-center gap-3 py-3 rounded-2xl bg-green-500 hover:bg-green-600 text-white font-semibold shadow-lg transition"
         >
-            <svg
-            viewBox="0 0 32 32"
-            width="22"
-            height="22"
-            fill="currentColor"
-            >
-            <path d="M16 .5C7.4.5.5 7.4.5 16c0 2.8.7 5.5 2.2 7.9L.3 31.5l7.8-2.1c2.3 1.3 5 2 7.9 2 8.6 0 15.5-6.9 15.5-15.5S24.6.5 16 .5zM16 28c-2.6 0-5-.7-7.2-2l-.5-.3-4.6 1.2 1.2-4.5-.3-.5c-1.3-2.1-2-4.6-2-7.2C2.6 8.6 8.6 2.6 16 2.6S29.4 8.6 29.4 16 23.4 28 16 28z" />
-            </svg>
-            TANYA UNIT DI WHATSAPP
+          TANYA UNIT DI WHATSAPP
         </a>
-
         <p className="text-xs text-muted-foreground text-center mt-2">
-            Team TM akan membalas langsung
+          Team TM akan membalas langsung
         </p>
-        </div>
+      </div>
 
-      {/* ================= RELATED SHOWROOM ================= */}
+      {/* RELATED */}
       <div className="max-w-6xl mx-auto px-2 space-y-4">
-        <h2 className="font-semibold">
-          Mobil Lain di Showroom Ini
-        </h2>
+        <h2 className="font-semibold">Mobil Lain di Showroom Ini</h2>
 
         {related.length === 0 ? (
           <p className="text-sm text-muted-foreground">
@@ -276,7 +267,6 @@ export default function MobilDetailClient({
           </div>
         )}
 
-        {/* PAGINATION */}
         {allCarsPagination.totalPages > 1 && (
           <Pagination
             currentPage={allCarsPagination.currentPage}

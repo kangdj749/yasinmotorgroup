@@ -8,6 +8,8 @@ import { paginate } from "@/lib/pagination/paginate";
 import MobilDetailClient from "./mobil-detail-client";
 import MobilDetailSkeleton from "./mobil-detail-skeleton";
 import { buildCarUrl } from "@/lib/routes/car";
+import { cloudinaryImage } from "@/lib/utils/cloudinary";
+
 
 /* ================= SEO METADATA ================= */
 export async function generateMetadata({
@@ -33,28 +35,33 @@ export async function generateMetadata({
     `Jual ${car.title} dengan DP ringan & cicilan terjangkau. Unit tersedia di showroom ${car.showroomName}.`;
 
   return {
+  title,
+  description,
+
+  alternates: {
+    canonical: buildCarUrl(car),
+  },
+
+  openGraph: {
     title,
     description,
+    type: "article",
+    url: buildCarUrl(car),
+    images: [
+      {
+        url: cloudinaryImage(car.image, "detail"),
+        width: 1200,
+        height: 630,
+        alt: car.title,
+      },
+    ],
+  },
 
-    alternates: {
-      canonical: buildCarUrl(car),
-    },
+  other: {
+    "preload-lcp-image": cloudinaryImage(car.image, "detail"),
+  },
+};
 
-    openGraph: {
-      title,
-      description,
-      type: "article",
-      url: buildCarUrl(car),
-      images: [
-        {
-          url: car.image,
-          width: 1200,
-          height: 630,
-          alt: car.title,
-        },
-      ],
-    },
-  };
 }
 
 /* ================= PAGE ================= */

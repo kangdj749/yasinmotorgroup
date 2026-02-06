@@ -6,6 +6,7 @@ import { MapPin } from "lucide-react";
 import { Car } from "@/types/car";
 import { cn } from "@/lib/utils";
 import { buildCarUrl } from "@/lib/routes/car";
+import { cloudinaryImage } from "@/lib/utils/cloudinary";
 
 type Props = {
   car: Car;
@@ -82,6 +83,25 @@ export default function CarCard({
 
         {/* IMAGE 1:1 */}
         <div className="relative aspect-square bg-muted">
+
+      
+
+          <Image
+            src={cloudinaryImage(car.image, "card")}
+            alt={car.title}
+            fill
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            loading="lazy"
+            decoding="async"
+            placeholder="blur"
+            blurDataURL="/blur-car.png"
+            className="
+              object-cover
+              transition-transform duration-500
+              group-hover:scale-105
+            "
+          />
+
           <Image
             src={car.image || "/placeholder-car.png"}
             alt={car.title}
