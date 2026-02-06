@@ -1,7 +1,7 @@
 "use client";
 export const dynamic = "force-dynamic";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -55,10 +55,17 @@ export default function MobilDetailClient({
     );
   }, [car.image, car.gallery]);
 
-  /* ✅ RESET STATE SAAT MOBIL BERUBAH */
+  /* ================= UX SCROLL RESTORE ================= */
+  // ⬇️ PASTIKAN LANGSUNG KE ATAS TANPA FLICKER
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, behavior: "instant" });
+  }, [car.id]);
+
+  /* ================= RESET STATE SAAT GANTI MOBIL ================= */
   useEffect(() => {
     setActiveIndex(0);
     setZoom(false);
+    setShowFullDesc(false);
   }, [car.id]);
 
   const prevImage = () =>
@@ -66,6 +73,7 @@ export default function MobilDetailClient({
   const nextImage = () =>
     setActiveIndex((p) => (p < images.length - 1 ? p + 1 : 0));
 
+  /* ================= WHATSAPP ================= */
   const waNumber = process.env.NEXT_PUBLIC_WA_NUMBER || "628123456789";
 
   const waMessage = encodeURIComponent(
@@ -118,19 +126,16 @@ Mohon info lebih lanjut 🙏`
             alt={car.title}
             fill
             priority={activeIndex === 0}
-            loading={activeIndex === 0 ? "eager" : "lazy"}
             sizes="(max-width: 768px) 100vw, 720px"
-            decoding="async"
             placeholder="blur"
             blurDataURL="/blur-car.png"
+            decoding="async"
+            unoptimized
             className={`object-cover transition-transform duration-300 ${
               zoom ? "scale-150 cursor-zoom-out" : "cursor-zoom-in"
             }`}
             onClick={() => setZoom((p) => !p)}
           />
-
-          
-         
 
           <div className="absolute bottom-3 right-3 bg-black/40 text-white p-2 rounded-full">
             <ZoomIn className="w-4 h-4" />
@@ -166,23 +171,21 @@ Mohon info lebih lanjut 🙏`
                     setZoom(false);
                   }}
                   className={`relative w-20 aspect-square shrink-0 rounded-xl overflow-hidden border-2 ${
-                    activeIndex === i
-                      ? "border-primary"
-                      : "border-border"
+                    activeIndex === i ? "border-primary" : "border-border"
                   }`}
                 >
                   <Image
-                  src={cloudinaryImage(img, "thumb")}
-                  alt=""
-                  fill
-                  sizes="80px"
-                  loading="lazy"
-                  decoding="async"
-                  placeholder="blur"
-                  blurDataURL="/blur-car.png"
-                  className="object-cover"
-                />
-
+                    src={cloudinaryImage(img, "thumb")}
+                    alt=""
+                    fill
+                    sizes="80px"
+                    loading="lazy"
+                    decoding="async"
+                    placeholder="blur"
+                    blurDataURL="/blur-car.png"
+                    unoptimized
+                    className="object-cover"
+                  />
                 </button>
               ))}
             </div>

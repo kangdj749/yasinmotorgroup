@@ -1,23 +1,16 @@
-const CLOUD_NAME = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
-
-type Variant = "card" | "detail" | "thumb" | "hero";
-
-const VARIANTS: Record<Variant, string> = {
-  card: "w_360,h_360,c_fill",
-  detail: "w_720,h_720,c_fill",
-  thumb: "w_160,h_160,c_fill",
-  hero: "w_1080,c_fill",
-};
-
 export function cloudinaryImage(
-  src?: string,
-  variant: Variant = "card"
+  src: string,
+  type: "lcp" | "detail" | "card" | "thumb"
 ) {
-  if (!src) return "/placeholder-car.png";
-  if (!src.includes("res.cloudinary.com")) return src;
+  const map = {
+    lcp: "f_auto,q_auto,dpr_auto,w_900,h_900,c_fill",
+    detail: "f_auto,q_auto,dpr_auto,w_720,h_720,c_fill",
+    card: "f_auto,q_auto,dpr_auto,w_400,h_400,c_fill",
+    thumb: "f_auto,q_auto,dpr_auto,w_160,h_160,c_fill",
+  };
 
   return src.replace(
     "/upload/",
-    `/upload/f_auto,q_auto,dpr_auto/${VARIANTS[variant]}/`
+    `/upload/${map[type]}/`
   );
 }

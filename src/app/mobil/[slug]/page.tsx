@@ -34,16 +34,14 @@ export async function generateMetadata({
     car.description?.slice(0, 155) ||
     `Jual ${car.title} dengan DP ringan & cicilan terjangkau. Unit tersedia di showroom ${car.showroomName}.`;
 
-  const lcpImage = cloudinaryImage(car.image, "detail");
+   const ogImage = cloudinaryImage(car.image, "detail");
 
-  return {
+   return {
     title,
     description,
-
     alternates: {
       canonical: buildCarUrl(car),
     },
-
     openGraph: {
       title,
       description,
@@ -51,17 +49,12 @@ export async function generateMetadata({
       url: buildCarUrl(car),
       images: [
         {
-          url: lcpImage,
+          url: ogImage,
           width: 1200,
           height: 630,
           alt: car.title,
         },
       ],
-    },
-
-    // 🔥 INI YANG BIKIN PRELOAD MASUK <head>
-    other: {
-      "preload-lcp-image": lcpImage,
     },
   };
 }
@@ -114,6 +107,13 @@ export default async function MobilDetailPage({
 
   return (
     <>
+      {/* PRELOAD LCP IMAGE – 1 IMAGE SAJA */}
+      <link
+        rel="preload"
+        as="image"
+        href={cloudinaryImage(car.image, "detail")}
+        fetchPriority="high"
+      />
       {/* ================= JSON-LD VEHICLE ================= */}
       <script
         type="application/ld+json"
@@ -123,7 +123,7 @@ export default async function MobilDetailPage({
             "@type": "Vehicle",
             name: car.title,
             brand: car.brand,
-            image: car.image,
+            image: cloudinaryImage(car.image, "detail"),
             description: car.description,
             offers: {
               "@type": "Offer",
