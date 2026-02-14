@@ -130,6 +130,7 @@ Mohon info lebih lanjut 🙏`
             placeholder="blur"
             blurDataURL="/blur-car.png"
             decoding="async"
+            loading="lazy"
             unoptimized
             className={`object-cover transition-transform duration-300 ${
               zoom ? "scale-150 cursor-zoom-out" : "cursor-zoom-in"
