@@ -11,8 +11,56 @@ import { CarCard } from "@/components/car";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 
 /* ================= ENV ================= */
-const WHATSAPP_NUMBER =
+const DEFAULT_WHATSAPP =
   process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
+
+/* ================= HELPER ================= */
+function formatPhoneToWA(phone?: string | number | null) {
+  if (!phone) return null;
+
+  // paksa jadi string dulu (fix error replace)
+  let clean = String(phone).trim();
+
+  // hapus semua selain angka
+  clean = clean.replace(/\D/g, "");
+
+  if (!clean) return null;
+
+  // kalau sudah mulai 62 → biarkan
+  if (clean.startsWith("62")) {
+    return clean;
+  }
+
+  // kalau mulai 8 (karena 0 hilang dari sheet)
+  if (clean.startsWith("8")) {
+    return "62" + clean;
+  }
+
+  // kalau mulai 0
+  if (clean.startsWith("0")) {
+    return "62" + clean.slice(1);
+  }
+
+  // fallback
+  return "62" + clean;
+}
+
+
+function formatAddress(address?: string | number | null) {
+  if (!address) return "";
+
+  // paksa jadi string supaya tidak error split
+  const clean = String(address).trim();
+
+  if (!clean) return "";
+
+  return clean
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean)
+    .join(", ");
+}
+
 
 /* ================= SEO METADATA ================= */
 export async function generateMetadata({
@@ -67,8 +115,16 @@ export default async function ShowroomPage({
   const cars = await getCarsByShowroomSlug(params.slug);
   const promoData = await getActivePromoByShowroom(params.slug);
 
-  const waLink = WHATSAPP_NUMBER
-    ? `https://wa.me/${WHATSAPP_NUMBER}`
+  /* ================= WHATSAPP ================= */
+  const showroomPhone = formatPhoneToWA(showroom.phone);
+  const defaultPhone = formatPhoneToWA(DEFAULT_WHATSAPP);
+
+  const finalPhone = showroomPhone || defaultPhone;
+
+  const waLink = finalPhone
+    ? `https://wa.me/${finalPhone}?text=${encodeURIComponent(
+        `Halo ${showroom.name}, saya tertarik melihat unit mobil yang tersedia.`
+      )}`
     : null;
 
   return (
@@ -96,9 +152,7 @@ export default async function ShowroomPage({
               addressCountry: "ID",
             },
             url: `${process.env.NEXT_PUBLIC_SITE_URL}/showroom/${showroom.slug}`,
-            telephone: WHATSAPP_NUMBER
-              ? `+62${WHATSAPP_NUMBER}`
-              : undefined,
+            telephone: finalPhone ? `+${finalPhone}` : undefined,
           }),
         }}
       />
@@ -132,30 +186,26 @@ export default async function ShowroomPage({
       </section>
 
       {/* ================= INFO CARD ================= */}
-      <section
-        className="
-          rounded-2xl
-          border border-border
-          bg-card
-          p-4
-          space-y-3
-        "
-      >
-        {showroom.address && (
+      <section className="rounded-2xl border border-border bg-card p-4 space-y-4">
+        {(showroom.address || showroom.city) && (
           <div className="flex gap-2 text-sm">
-            <MapPin className="h-4 w-4 mt-0.5 text-muted-foreground" />
-            <span>{showroom.address}</span>
+            <MapPin className="h-4 w-4 mt-0.5 text-muted-foreground shrink-0" />
+            <span className="leading-relaxed whitespace-pre-line">
+              {formatAddress(showroom.address)}
+              {showroom.city && `\n${showroom.city}`}
+            </span>
           </div>
         )}
 
-        <div className="flex gap-3 flex-wrap">
-          {showroom.mapsUrl && (
+        <div className="flex gap-4 flex-wrap">
+          {showroom.mapsUrl?.trim() && (
             <Link
               href={showroom.mapsUrl}
               target="_blank"
-              className="text-xs font-medium text-primary"
+              rel="noopener noreferrer"
+              className="text-xs font-medium text-primary hover:underline"
             >
-              Buka di Google Maps →
+              📍 Buka di Google Maps
             </Link>
           )}
 
@@ -163,9 +213,10 @@ export default async function ShowroomPage({
             <Link
               href={waLink}
               target="_blank"
-              className="text-xs font-medium text-primary"
+              rel="noopener noreferrer"
+              className="text-xs font-medium text-primary hover:underline"
             >
-              Hubungi via WhatsApp →
+              💬 Hubungi via WhatsApp
             </Link>
           )}
         </div>
