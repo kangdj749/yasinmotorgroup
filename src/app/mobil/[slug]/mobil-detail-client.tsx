@@ -243,6 +243,7 @@ Mohon info lebih lanjut 🙏`
       {/* CTA WHATSAPP */}
       <div className="pt-4">
         <a
+          id="btn-wa"
           href={waLink}
           target="_blank"
           rel="noopener noreferrer"
