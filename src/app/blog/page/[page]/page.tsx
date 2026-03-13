@@ -1,12 +1,31 @@
+import { notFound } from "next/navigation"
+
 import { getBlogPosts } from "@/lib/googleSheetsBlog"
+
 import BlogCard from "@/components/blog/BlogCard"
 import BlogPagination from "@/components/blog/BlogPagination"
 
 import type { BlogPost } from "@/types/blog"
 
+interface PageProps {
+  params: {
+    page: string
+  }
+}
+
 const POSTS_PER_PAGE = 9
 
-export default async function BlogPage() {
+export default async function BlogPaginationPage(
+  { params }: PageProps
+) {
+
+  const page =
+    parseInt(params.page)
+
+  if (
+    Number.isNaN(page) ||
+    page < 1
+  ) notFound()
 
   const posts =
     await getBlogPosts() as BlogPost[]
@@ -18,15 +37,22 @@ export default async function BlogPage() {
         new Date(a.published_date).getTime()
     )
 
-  const paginated =
-    sorted.slice(
-      0,
-      POSTS_PER_PAGE
-    )
-
   const totalPages =
     Math.ceil(
       sorted.length / POSTS_PER_PAGE
+    )
+
+  if (page > totalPages)
+    notFound()
+
+  const start =
+    (page - 1) *
+    POSTS_PER_PAGE
+
+  const paginated =
+    sorted.slice(
+      start,
+      start + POSTS_PER_PAGE
     )
 
   return (
@@ -51,7 +77,6 @@ export default async function BlogPage() {
           className="
           text-[18px]
           font-semibold
-          tracking-tight
           "
         >
           Blog Otomotif
@@ -63,9 +88,7 @@ export default async function BlogPage() {
           opacity-70
           "
         >
-          Panduan membeli mobil bekas,
-          tips otomotif,
-          dan informasi kendaraan
+          Halaman {page}
         </p>
 
       </header>
@@ -92,7 +115,7 @@ export default async function BlogPage() {
       </section>
 
       <BlogPagination
-        currentPage={1}
+        currentPage={page}
         totalPages={totalPages}
       />
 

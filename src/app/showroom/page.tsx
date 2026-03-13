@@ -1,8 +1,8 @@
 // src/app/showroom/page.tsx
 
 import Link from "next/link";
-import { getShowrooms } from "@/lib/data/getShowrooms";
 import { MapPin } from "lucide-react";
+import { getShowrooms } from "@/lib/data/getShowrooms";
 
 export default async function ShowroomIndexPage() {
   const showrooms = await getShowrooms();
@@ -10,29 +10,45 @@ export default async function ShowroomIndexPage() {
   return (
     <main
       className="
-        max-w-6xl mx-auto
-        px-4 sm:px-6
-        py-6 sm:py-10
-        space-y-6
+        max-w-[1020px] mx-auto
+        px-3 sm:px-5
+        py-5 sm:py-7
+        space-y-5
       "
     >
       {/* HEADER */}
       <section className="space-y-1">
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
+        <h1
+          className="
+            text-lg sm:text-xl
+            font-bold
+            tracking-tight
+            leading-tight
+          "
+        >
           Showroom Mobil Bekas
         </h1>
-        <p className="text-sm sm:text-base text-muted-foreground max-w-xl">
-          Pilih showroom resmi dengan unit terbaik & terpercaya.
+
+        <p
+          className="
+            text-xs sm:text-sm
+            text-muted-foreground
+            max-w-md
+            leading-snug
+          "
+        >
+          Pilih showroom resmi dengan unit terbaik dan terpercaya.
         </p>
       </section>
 
       {/* SHOWROOM GRID */}
       <ul
         className="
-          grid grid-cols-2
-          gap-3
+          grid
+          grid-cols-2
           sm:grid-cols-3
           lg:grid-cols-4
+          gap-2.5 sm:gap-3
         "
       >
         {showrooms.map((s) => (
@@ -40,29 +56,34 @@ export default async function ShowroomIndexPage() {
             <Link
               href={`/showroom/${s.slug}`}
               className="
-                group block
-                h-full
-                rounded-2xl
+                group block h-full
+                rounded-xl
                 border border-border
                 bg-card
-                p-4
-                shadow-card
-                hover:shadow-soft
-                hover:border-primary/50
-                transition
+                px-3 py-3
+                transition-all duration-200
+                hover:border-primary/40
+                hover:shadow-sm
               "
             >
-              <div className="h-full flex flex-col justify-between gap-3">
+              <div className="flex h-full flex-col justify-between gap-2">
                 {/* TOP */}
-                <div className="space-y-1">
-                  <span className="text-[11px] uppercase tracking-wide text-muted-foreground">
+                <div className="space-y-[2px]">
+                  <span
+                    className="
+                      text-[10px]
+                      uppercase
+                      tracking-wide
+                      text-muted-foreground
+                    "
+                  >
                     Showroom
                   </span>
 
                   <h2
                     className="
+                      text-[13px] sm:text-sm
                       font-semibold
-                      text-sm sm:text-base
                       leading-snug
                       line-clamp-2
                     "
@@ -70,10 +91,16 @@ export default async function ShowroomIndexPage() {
                     {s.name}
                   </h2>
 
-                  {/* ADDRESS / CITY */}
+                  {/* CITY */}
                   {s.city && (
-                    <div className="flex items-center gap-1 text-[11px] text-muted-foreground">
-                      <MapPin className="h-3 w-3" />
+                    <div
+                      className="
+                        flex items-center gap-1
+                        text-[11px]
+                        text-muted-foreground
+                      "
+                    >
+                      <MapPin className="h-3 w-3 shrink-0" />
                       <span className="line-clamp-1">
                         {s.city}
                       </span>
@@ -84,7 +111,9 @@ export default async function ShowroomIndexPage() {
                 {/* CTA */}
                 <span
                   className="
-                    text-xs font-medium text-primary
+                    text-[11px]
+                    font-medium
+                    text-primary
                     group-hover:underline
                   "
                 >

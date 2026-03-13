@@ -1,6 +1,12 @@
 "use client";
-export const dynamic = "force-dynamic";
 
+declare global {
+  interface Window {
+    dataLayer: Record<string, any>[];
+  }
+}
+
+export const dynamic = "force-dynamic";
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -56,7 +62,6 @@ export default function MobilDetailClient({
   }, [car.image, car.gallery]);
 
   /* ================= UX SCROLL RESTORE ================= */
-  // ⬇️ PASTIKAN LANGSUNG KE ATAS TANPA FLICKER
   useLayoutEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
   }, [car.id]);
@@ -68,12 +73,31 @@ export default function MobilDetailClient({
     setShowFullDesc(false);
   }, [car.id]);
 
+  /* ================= GTM DATA LAYER VIEW MOBIL ================= */
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    window.dataLayer = window.dataLayer || [];
+
+    window.dataLayer.push({
+      event: "view_mobil",
+      car_id: car.id,
+      car_name: car.title,
+      brand: car.brand,
+      price_installment: car.installment,
+      dp: car.dp,
+      showroom: car.showroomName,
+    });
+  }, [car.id]);
+
   const prevImage = () =>
     setActiveIndex((p) => (p > 0 ? p - 1 : images.length - 1));
+
   const nextImage = () =>
     setActiveIndex((p) => (p < images.length - 1 ? p + 1 : 0));
 
   /* ================= WHATSAPP ================= */
+
   const waNumber = process.env.NEXT_PUBLIC_WA_NUMBER || "628123456789";
 
   const waMessage = encodeURIComponent(
@@ -94,10 +118,28 @@ Mohon info lebih lanjut 🙏`
 
   const waLink = `https://wa.me/${waNumber}?text=${waMessage}`;
 
+  /* ================= WA CLICK TRACKING ================= */
+
+  const handleWaClick = () => {
+    if (typeof window === "undefined") return;
+
+    window.dataLayer = window.dataLayer || [];
+
+    window.dataLayer.push({
+      event: "wa_click",
+      car_id: car.id,
+      car_name: car.title,
+      brand: car.brand,
+      showroom: car.showroomName,
+    });
+  };
+
   /* ================= RENDER ================= */
+
   return (
     <section className="bg-background min-h-screen py-8 px-4 space-y-14 pb-24">
       <div className="max-w-md mx-auto bg-card rounded-3xl shadow-card border border-border overflow-hidden">
+
         {/* BACK */}
         <div className="px-4 pt-4">
           <Link
@@ -117,6 +159,7 @@ Mohon info lebih lanjut 🙏`
           }
           onTouchEnd={(e) => {
             touchEndX.current = e.changedTouches[0].screenX;
+
             if (touchStartX.current - touchEndX.current > 50) nextImage();
             if (touchEndX.current - touchStartX.current > 50) prevImage();
           }}
@@ -125,7 +168,6 @@ Mohon info lebih lanjut 🙏`
             src={cloudinaryImage(images[activeIndex], "detail")}
             alt={car.title}
             fill
-            priority={activeIndex === 0}
             sizes="(max-width: 768px) 100vw, 720px"
             placeholder="blur"
             blurDataURL="/blur-car.png"
@@ -150,6 +192,7 @@ Mohon info lebih lanjut 🙏`
               >
                 <ChevronLeft />
               </button>
+
               <button
                 onClick={nextImage}
                 className="absolute right-3 top-1/2 -translate-y-1/2 z-10 bg-black/40 text-white p-2 rounded-full"
@@ -197,6 +240,7 @@ Mohon info lebih lanjut 🙏`
         <div className="p-6 space-y-6">
           <div>
             <h1 className="text-2xl font-bold">{car.title}</h1>
+
             {car.showroomName && (
               <p className="text-sm text-muted-foreground">
                 {car.showroomName}
@@ -208,9 +252,11 @@ Mohon info lebih lanjut 🙏`
             <p className="text-primary font-bold text-2xl">
               DP Rp {car.dp.toLocaleString("id-ID")}
             </p>
+
             <p className="text-sm">
               Angsuran Rp {car.installment.toLocaleString("id-ID")} / bulan
             </p>
+
             <p className="text-xs text-muted-foreground">
               Tenor {car.tenor}
             </p>
@@ -221,6 +267,7 @@ Mohon info lebih lanjut 🙏`
             <h2 className="font-semibold text-primary mb-2">
               Deskripsi Mobil
             </h2>
+
             <p
               className={`text-sm leading-relaxed whitespace-pre-line ${
                 !showFullDesc ? "line-clamp-6" : ""
@@ -228,6 +275,7 @@ Mohon info lebih lanjut 🙏`
             >
               {car.description || "Tidak ada deskripsi."}
             </p>
+
             {car.description && car.description.length > 200 && (
               <button
                 onClick={() => setShowFullDesc((p) => !p)}
@@ -247,10 +295,12 @@ Mohon info lebih lanjut 🙏`
           href={waLink}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={handleWaClick}
           className="w-full flex items-center justify-center gap-3 py-3 rounded-2xl bg-green-500 hover:bg-green-600 text-white font-semibold shadow-lg transition"
         >
           TANYA UNIT DI WHATSAPP
         </a>
+
         <p className="text-xs text-muted-foreground text-center mt-2">
           Team TM akan membalas langsung
         </p>

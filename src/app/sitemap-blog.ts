@@ -1,5 +1,5 @@
 import { MetadataRoute } from "next";
-import { getAllPromos } from "@/lib/data/getAllPromos";
+import { getBlogPosts } from "@/lib/googleSheetsBlog";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
@@ -7,16 +7,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     process.env.NEXT_PUBLIC_SITE_URL ??
     "https://www.yasinmotorgroup.com";
 
-  const promos = await getAllPromos();
+  const posts = await getBlogPosts();
 
-  return promos.map((promo) => ({
+  return posts.map((post) => ({
 
-    url: `${base}/promo/${promo.slug}`,
+    url: `${base}/blog/${post.slug}`,
 
     lastModified:
-      promo.start_date
-        ? new Date(promo.start_date)
-        : new Date(),
+      post.last_updated ??
+      post.published_date,
 
     changeFrequency: "weekly",
 

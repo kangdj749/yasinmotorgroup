@@ -18,40 +18,24 @@ const DEFAULT_WHATSAPP =
 function formatPhoneToWA(phone?: string | number | null) {
   if (!phone) return null;
 
-  // paksa jadi string dulu (fix error replace)
   let clean = String(phone).trim();
-
-  // hapus semua selain angka
   clean = clean.replace(/\D/g, "");
 
   if (!clean) return null;
 
-  // kalau sudah mulai 62 → biarkan
-  if (clean.startsWith("62")) {
-    return clean;
-  }
+  if (clean.startsWith("62")) return clean;
 
-  // kalau mulai 8 (karena 0 hilang dari sheet)
-  if (clean.startsWith("8")) {
-    return "62" + clean;
-  }
+  if (clean.startsWith("8")) return "62" + clean;
 
-  // kalau mulai 0
-  if (clean.startsWith("0")) {
-    return "62" + clean.slice(1);
-  }
+  if (clean.startsWith("0")) return "62" + clean.slice(1);
 
-  // fallback
   return "62" + clean;
 }
-
 
 function formatAddress(address?: string | number | null) {
   if (!address) return "";
 
-  // paksa jadi string supaya tidak error split
   const clean = String(address).trim();
-
   if (!clean) return "";
 
   return clean
@@ -60,7 +44,6 @@ function formatAddress(address?: string | number | null) {
     .filter(Boolean)
     .join(", ");
 }
-
 
 /* ================= SEO METADATA ================= */
 export async function generateMetadata({
@@ -118,7 +101,6 @@ export default async function ShowroomPage({
   /* ================= WHATSAPP ================= */
   const showroomPhone = formatPhoneToWA(showroom.phone);
   const defaultPhone = formatPhoneToWA(DEFAULT_WHATSAPP);
-
   const finalPhone = showroomPhone || defaultPhone;
 
   const waLink = finalPhone
@@ -130,11 +112,11 @@ export default async function ShowroomPage({
   return (
     <main
       className="
-        max-w-6xl mx-auto
-        px-4 sm:px-6
-        pt-6
-        pb-32 sm:pb-10
-        space-y-8
+        max-w-[1020px] mx-auto
+        px-3 sm:px-5
+        pt-5 sm:pt-6
+        pb-32 sm:pb-12
+        space-y-6
       "
     >
       {/* ================= JSON-LD ================= */}
@@ -167,30 +149,38 @@ export default async function ShowroomPage({
       />
 
       {/* ================= HERO ================= */}
-      <section className="space-y-2">
-        <h1 className="text-2xl sm:text-3xl font-bold">
+      <section className="space-y-1">
+        <h1 className="text-lg sm:text-xl font-bold tracking-tight">
           {showroom.name}
         </h1>
 
         {showroom.city && (
-          <p className="text-sm text-muted-foreground">
+          <p className="text-xs sm:text-sm text-muted-foreground">
             {showroom.city}
           </p>
         )}
 
         {showroom.description && (
-          <p className="text-sm max-w-2xl">
+          <p className="text-xs sm:text-sm max-w-lg leading-snug">
             {showroom.description}
           </p>
         )}
       </section>
 
       {/* ================= INFO CARD ================= */}
-      <section className="rounded-2xl border border-border bg-card p-4 space-y-4">
+      <section
+        className="
+          rounded-xl
+          border border-border
+          bg-card
+          px-3 py-3
+          space-y-3
+        "
+      >
         {(showroom.address || showroom.city) && (
-          <div className="flex gap-2 text-sm">
+          <div className="flex gap-2 text-xs sm:text-sm">
             <MapPin className="h-4 w-4 mt-0.5 text-muted-foreground shrink-0" />
-            <span className="leading-relaxed whitespace-pre-line">
+            <span className="leading-snug whitespace-pre-line">
               {formatAddress(showroom.address)}
               {showroom.city && `\n${showroom.city}`}
             </span>
@@ -203,7 +193,7 @@ export default async function ShowroomPage({
               href={showroom.mapsUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs font-medium text-primary hover:underline"
+              className="text-[11px] font-medium text-primary hover:underline"
             >
               📍 Buka di Google Maps
             </Link>
@@ -214,7 +204,7 @@ export default async function ShowroomPage({
               href={waLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-xs font-medium text-primary hover:underline"
+              className="text-[11px] font-medium text-primary hover:underline"
             >
               💬 Hubungi via WhatsApp
             </Link>
@@ -226,18 +216,18 @@ export default async function ShowroomPage({
       {promoData && (
         <section
           className="
-            rounded-2xl
-            border
+            rounded-xl
+            border border-border
             bg-primary/5
-            p-4
-            space-y-3
+            px-3 py-3
+            space-y-2
           "
         >
-          <h2 className="font-semibold text-base">
+          <h2 className="font-semibold text-sm">
             🔥 Promo Aktif
           </h2>
 
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+          <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3">
             {promoData.cars.slice(0, 3).map((car) => (
               <CarCard
                 key={car.id}
@@ -249,7 +239,7 @@ export default async function ShowroomPage({
 
           <Link
             href={`/promo/${promoData.promo.slug}`}
-            className="text-xs text-primary font-medium"
+            className="text-[11px] text-primary font-medium"
           >
             Lihat detail promo →
           </Link>
@@ -257,17 +247,17 @@ export default async function ShowroomPage({
       )}
 
       {/* ================= CAR GRID ================= */}
-      <section className="space-y-3">
-        <h2 className="font-semibold text-lg">
+      <section className="space-y-2">
+        <h2 className="font-semibold text-sm sm:text-base">
           Unit Tersedia
         </h2>
 
         {cars.length === 0 ? (
-          <p className="text-sm text-muted-foreground">
+          <p className="text-xs sm:text-sm text-muted-foreground">
             Belum ada unit tersedia di showroom ini.
           </p>
         ) : (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-4">
             {cars.map((car) => (
               <CarCard key={car.id} car={car} />
             ))}
@@ -281,24 +271,27 @@ export default async function ShowroomPage({
           className="
             fixed bottom-0 left-0 right-0
             sm:hidden
-            border-t
+            border-t border-border
             bg-background/95 backdrop-blur
-            p-3
+            px-3 py-3
             z-40
           "
         >
-          <Link
-            href={waLink}
-            className="
-              block text-center
-              bg-primary text-primary-foreground
-              rounded-full
-              py-3
-              font-semibold text-sm
-            "
-          >
-            Hubungi via WhatsApp
-          </Link>
+          <div className="max-w-[1020px] mx-auto">
+            <Link
+              href={waLink}
+              className="
+                block text-center
+                bg-primary text-primary-foreground
+                rounded-full
+                py-2.5
+                font-semibold
+                text-xs
+              "
+            >
+              Hubungi via WhatsApp
+            </Link>
+          </div>
         </div>
       )}
     </main>

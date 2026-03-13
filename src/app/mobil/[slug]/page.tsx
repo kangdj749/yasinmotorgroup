@@ -1,5 +1,5 @@
 import { Suspense } from "react";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import type { Metadata } from "next";
 
 import { getAllCars, getCarBySlug } from "@/lib/data/cars";
@@ -7,46 +7,54 @@ import { paginate } from "@/lib/pagination/paginate";
 
 import MobilDetailClient from "./mobil-detail-client";
 import MobilDetailSkeleton from "./mobil-detail-skeleton";
-import { buildCarUrl } from "@/lib/routes/car";
+
+import { buildCarUrl, buildCarPath } from "@/lib/routes/car";
 import { cloudinaryImage } from "@/lib/utils/cloudinary";
 
-
 /* ================= SEO METADATA ================= */
+
 export async function generateMetadata({
   params,
 }: {
   params: { slug: string };
 }): Promise<Metadata> {
+
   const car = await getCarBySlug(params.slug);
 
   if (!car) {
     return {
       title: "Mobil Tidak Ditemukan",
-      robots: { index: false },
+      robots: {
+        index: false,
+        follow: false,
+      },
     };
   }
 
-  const title = `${car.title} | DP ${Intl.NumberFormat("id-ID").format(
-    car.dp
-  )}`;
+  const title =
+    `${car.title} | DP ${Intl.NumberFormat("id-ID").format(car.dp)}`;
 
   const description =
     car.description?.slice(0, 155) ||
     `Jual ${car.title} dengan DP ringan & cicilan terjangkau. Unit tersedia di showroom ${car.showroomName}.`;
 
-   const ogImage = cloudinaryImage(car.image, "detail");
+  const ogImage = cloudinaryImage(car.image, "detail");
 
-   return {
+  const canonical = buildCarUrl(car);
+
+  return {
     title,
     description,
+
     alternates: {
-      canonical: buildCarUrl(car),
+      canonical,
     },
+
     openGraph: {
       title,
       description,
       type: "article",
-      url: buildCarUrl(car),
+      url: canonical,
       images: [
         {
           url: ogImage,
@@ -56,10 +64,18 @@ export async function generateMetadata({
         },
       ],
     },
+
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [ogImage],
+    },
   };
 }
 
 /* ================= PAGE ================= */
+
 export default async function MobilDetailPage({
   params,
   searchParams,
@@ -70,8 +86,20 @@ export default async function MobilDetailPage({
     brand?: string;
   };
 }) {
+
   const car = await getCarBySlug(params.slug);
+
   if (!car) return notFound();
+
+  /* ================= CANONICAL REDIRECT ================= */
+
+  const canonicalSlug = `${car.slug}--${car.id}`;
+
+  if (params.slug !== canonicalSlug) {
+    redirect(buildCarPath(car));
+  }
+
+  /* ================= PAGINATION PARAM ================= */
 
   const page = Number(searchParams.page) || 1;
   const activeBrand = searchParams.brand;
@@ -79,6 +107,7 @@ export default async function MobilDetailPage({
   const allCars = await getAllCars();
 
   /* ================= RELATED (SHOWROOM) ================= */
+
   const relatedAll = allCars.filter(
     (c) =>
       c.showroomId === car.showroomId &&
@@ -89,6 +118,7 @@ export default async function MobilDetailPage({
   const relatedPagination = paginate(relatedAll, page, 8);
 
   /* ================= ALL CARS ================= */
+
   const availableCars = allCars.filter(
     (c) => c.status === "available"
   );
@@ -103,18 +133,23 @@ export default async function MobilDetailPage({
 
   const allCarsPagination = paginate(filteredCars, page, 12);
 
-  const carUrl = `${process.env.NEXT_PUBLIC_SITE_URL}${buildCarUrl(car)}`;
+  /* ================= CANONICAL URL ================= */
+
+  const carUrl = buildCarUrl(car);
 
   return (
     <>
-      {/* PRELOAD LCP IMAGE – 1 IMAGE SAJA */}
+      {/* PRELOAD LCP IMAGE */}
+
       <link
         rel="preload"
         as="image"
         href={cloudinaryImage(car.image, "detail")}
         fetchPriority="high"
       />
+
       {/* ================= JSON-LD VEHICLE ================= */}
+
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

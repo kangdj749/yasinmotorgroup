@@ -54,8 +54,6 @@ export default async function MobilPage({ searchParams }: Props) {
     new Set(availableCars.map((c) => c.brand))
   );
 
- 
-
   /* ================= JSON-LD ================= */
   const jsonLd = {
     "@context": "https://schema.org",
@@ -86,21 +84,36 @@ export default async function MobilPage({ searchParams }: Props) {
 
       <main
         className="
-          max-w-7xl mx-auto
-          px-4 sm:px-6
-          pt-6 pb-24
-          space-y-8
-        "
+        max-w-[1020px] mx-auto
+        px-3 sm:px-5
+        pt-6 sm:pt-8
+        pb-28 md:pb-12
+        space-y-6
+      "
       >
         {/* ================= HERO ================= */}
         <section className="space-y-2">
-          <h1 className="text-2xl sm:text-3xl font-bold">
+          <h1
+            className="
+            text-lg sm:text-xl
+            font-bold
+            tracking-tight
+            leading-tight
+          "
+          >
             {brand
               ? `Mobil Bekas ${brand}`
               : "Daftar Mobil Bekas"}
           </h1>
 
-          <p className="text-sm text-muted-foreground max-w-2xl">
+          <p
+            className="
+            text-xs sm:text-sm
+            text-muted-foreground
+            leading-snug
+            max-w-lg
+          "
+          >
             {brand
               ? `Pilihan mobil bekas ${brand} berkualitas dengan harga terbaik. Unit terbatas dan siap kredit.`
               : "Temukan mobil bekas berkualitas dari berbagai merek populer. Harga terbaik, unit siap pakai, bisa kredit maupun cash."}

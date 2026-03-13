@@ -28,12 +28,11 @@ export default function PromoDetailClient({
   return (
     <main
       className="
-        max-w-7xl mx-auto
-        px-4
-        pt-6
-        border border-border
-        pb-32 sm:pb-10
-        space-y-8
+        max-w-[1020px] mx-auto
+        px-3 sm:px-5
+        pt-5 sm:pt-6
+        pb-32 sm:pb-12
+        space-y-6
       "
     >
       {/* BREADCRUMB */}
@@ -49,11 +48,11 @@ export default function PromoDetailClient({
       <section
         className="
           relative
-          rounded-3xl
+          rounded-2xl
           border border-border
-          bg-linear-to-br from-primary/15 via-background to-background
-          p-5 sm:p-8
-          space-y-4
+          bg-linear-to-br from-primary/10 via-background to-background
+          px-4 py-4 sm:px-6 sm:py-6
+          space-y-3
         "
       >
         {promo.highlightBadge && (
@@ -61,8 +60,8 @@ export default function PromoDetailClient({
             className="
               inline-block
               bg-primary text-primary-foreground
-              text-xs font-semibold
-              px-4 py-1.5
+              text-[11px] font-semibold
+              px-3 py-1
               rounded-full
             "
           >
@@ -71,24 +70,51 @@ export default function PromoDetailClient({
         )}
 
         <div className="space-y-1">
-          <h1 className="text-2xl sm:text-3xl font-bold leading-tight">
+          <h1
+            className="
+              text-lg sm:text-xl
+              font-bold
+              leading-tight
+              tracking-tight
+            "
+          >
             {promo.title}
           </h1>
+
           {promo.subtitle && (
-            <p className="text-sm sm:text-base text-muted-foreground max-w-2xl">
+            <p
+              className="
+                text-xs sm:text-sm
+                text-muted-foreground
+                leading-snug
+                max-w-lg
+              "
+            >
               {promo.subtitle}
             </p>
           )}
         </div>
 
         {promo.description && (
-          <p className="text-sm sm:text-base max-w-2xl whitespace-pre-line">
+          <p
+            className="
+              text-xs sm:text-sm
+              leading-snug
+              max-w-lg
+              whitespace-pre-line
+            "
+          >
             {promo.description}
           </p>
         )}
 
         {(promo.startDate || promo.endDate) && (
-          <p className="text-xs text-muted-foreground">
+          <p
+            className="
+              text-[11px]
+              text-muted-foreground
+            "
+          >
             Berlaku{" "}
             {promo.startDate && `mulai ${promo.startDate}`}
             {promo.startDate && promo.endDate && " hingga "}
@@ -98,12 +124,26 @@ export default function PromoDetailClient({
       </section>
 
       {/* LIST MOBIL */}
-      <section className="space-y-4">
-        <h2 className="text-lg sm:text-xl font-semibold">
+      <section className="space-y-3">
+        <h2
+          className="
+            text-sm sm:text-base
+            font-semibold
+            tracking-tight
+          "
+        >
           Unit Mobil Promo
         </h2>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+        <div
+          className="
+            grid
+            grid-cols-2
+            sm:grid-cols-3
+            lg:grid-cols-4
+            gap-2.5 sm:gap-3
+          "
+        >
           {cars.map((car) => (
             <CarCard
               key={car.id}
@@ -120,24 +160,26 @@ export default function PromoDetailClient({
           fixed bottom-0 left-0 right-0
           sm:hidden
           bg-background/95 backdrop-blur
-          border-t
-          p-3
+          border-t border-border
+          px-3 py-3
           z-40
         "
       >
-        <Link
-          href="/contact"
-          className="
-            flex items-center justify-center
-            w-full
-            rounded-full
-            bg-primary text-primary-foreground
-            py-3
-            text-sm font-semibold
-          "
-        >
-          {promo.ctaText || "Hubungi Sales Promo"}
-        </Link>
+        <div className="max-w-[1020px] mx-auto">
+          <Link
+            href="/contact"
+            className="
+              flex items-center justify-center
+              w-full
+              rounded-full
+              bg-primary text-primary-foreground
+              py-2.5
+              text-xs font-semibold
+            "
+          >
+            {promo.ctaText || "Hubungi Sales Promo"}
+          </Link>
+        </div>
       </div>
     </main>
   );
