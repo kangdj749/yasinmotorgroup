@@ -1,14 +1,18 @@
 export default function PromoDetailSkeleton() {
   return (
-    <section className="space-y-6 animate-pulse">
+    <section
+      className="
+        space-y-4
+      "
+    >
       {/* BADGE */}
-      <div className="h-6 w-28 rounded-full bg-muted" />
+      <div className="h-5 w-24 rounded-full skeleton" />
 
       {/* TITLE */}
-      <div className="space-y-2">
-        <div className="h-7 w-3/4 rounded-lg bg-muted" />
-        <div className="h-4 w-full max-w-xl rounded bg-muted" />
-        <div className="h-4 w-5/6 max-w-lg rounded bg-muted" />
+      <div className="space-y-1.5">
+        <div className="h-5 w-3/4 rounded skeleton" />
+        <div className="h-3 w-full max-w-xl rounded skeleton" />
+        <div className="h-3 w-5/6 max-w-lg rounded skeleton" />
       </div>
 
       {/* DIVIDER */}
@@ -20,7 +24,7 @@ export default function PromoDetailSkeleton() {
           grid grid-cols-2
           sm:grid-cols-3
           lg:grid-cols-4
-          gap-3
+          gap-2
         "
       >
         {Array.from({ length: 4 }).map((_, i) => (
@@ -37,25 +41,36 @@ function PromoCarCardSkeleton() {
   return (
     <div
       className="
-        rounded-2xl
-        border
+        rounded-xl
+        border border-border
         bg-card
         overflow-hidden
-        shadow-sm
       "
     >
       {/* IMAGE */}
-      <div className="aspect-square bg-muted" />
+      <div
+        className="
+          aspect-[4/3]
+          skeleton
+        "
+      />
 
       {/* CONTENT */}
-      <div className="p-3 space-y-2">
-        <div className="h-4 w-full rounded bg-muted" />
-        <div className="h-3 w-3/4 rounded bg-muted" />
+      <div
+        className="
+          p-2.5
+          space-y-1.5
+        "
+      >
+        {/* TITLE */}
+        <div className="h-3.5 w-full rounded skeleton" />
+        <div className="h-2.5 w-3/4 rounded skeleton" />
 
-        <div className="pt-2 space-y-1">
-          <div className="h-3 w-16 rounded bg-muted" />
-          <div className="h-5 w-24 rounded bg-muted" />
-          <div className="h-3 w-32 rounded bg-muted" />
+        {/* PRICE */}
+        <div className="pt-1 space-y-1">
+          <div className="h-2.5 w-16 rounded skeleton" />
+          <div className="h-4 w-24 rounded skeleton" />
+          <div className="h-2.5 w-28 rounded skeleton" />
         </div>
       </div>
     </div>
