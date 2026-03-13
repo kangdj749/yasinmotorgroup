@@ -6,19 +6,31 @@ export default function MobilDetailSkeleton() {
   return (
     <main
       className="
-        max-w-6xl mx-auto
-        px-4 sm:px-6
-        py-6 space-y-8
+        max-w-[1020px] mx-auto
+        px-3 sm:px-5
+        py-6 sm:py-8
+        space-y-8
       "
     >
-      {/* GALLERY */}
-      <CarDetailGallerySkeleton />
+      {/* MAIN GRID */}
+      <div
+        className="
+          grid
+          gap-6
+          lg:grid-cols-2
+        "
+      >
+        {/* GALLERY */}
+        <CarDetailGallerySkeleton />
 
-      {/* INFO */}
-      <CarDetailInfoSkeleton />
+        {/* INFO */}
+        <CarDetailInfoSkeleton />
+      </div>
 
-      {/* RELATED */}
-      <RelatedCarsSkeleton />
+      {/* RELATED CARS */}
+      <div className="pt-2">
+        <RelatedCarsSkeleton />
+      </div>
     </main>
   );
 }

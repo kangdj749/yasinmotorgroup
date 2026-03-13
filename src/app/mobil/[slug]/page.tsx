@@ -11,13 +11,27 @@ import MobilDetailSkeleton from "./mobil-detail-skeleton";
 import { buildCarUrl, buildCarPath } from "@/lib/routes/car";
 import { cloudinaryImage } from "@/lib/utils/cloudinary";
 
-/* ================= SEO METADATA ================= */
+/* ======================================================
+   TYPES
+====================================================== */
 
-export async function generateMetadata({
-  params,
-}: {
-  params: { slug: string };
-}): Promise<Metadata> {
+type PageProps = {
+  params: {
+    slug: string;
+  };
+  searchParams: {
+    page?: string;
+    brand?: string;
+  };
+};
+
+/* ======================================================
+   SEO METADATA
+====================================================== */
+
+export async function generateMetadata(
+  { params }: { params: { slug: string } }
+): Promise<Metadata> {
 
   const car = await getCarBySlug(params.slug);
 
@@ -39,7 +53,6 @@ export async function generateMetadata({
     `Jual ${car.title} dengan DP ringan & cicilan terjangkau. Unit tersedia di showroom ${car.showroomName}.`;
 
   const ogImage = cloudinaryImage(car.image, "detail");
-
   const canonical = buildCarUrl(car);
 
   return {
@@ -74,22 +87,20 @@ export async function generateMetadata({
   };
 }
 
-/* ================= PAGE ================= */
+/* ======================================================
+   PAGE
+====================================================== */
 
 export default async function MobilDetailPage({
   params,
   searchParams,
-}: {
-  params: { slug: string };
-  searchParams: {
-    page?: string;
-    brand?: string;
-  };
-}) {
+}: PageProps) {
 
   const car = await getCarBySlug(params.slug);
 
-  if (!car) return notFound();
+  if (!car) {
+    return notFound();
+  }
 
   /* ================= CANONICAL REDIRECT ================= */
 
@@ -99,25 +110,29 @@ export default async function MobilDetailPage({
     redirect(buildCarPath(car));
   }
 
-  /* ================= PAGINATION PARAM ================= */
+  /* ================= PAGINATION ================= */
 
   const page = Number(searchParams.page) || 1;
   const activeBrand = searchParams.brand;
 
   const allCars = await getAllCars();
 
-  /* ================= RELATED (SHOWROOM) ================= */
+  /* ======================================================
+     RELATED CARS (SHOWROOM)
+  ====================================================== */
 
-  const relatedAll = allCars.filter(
+  const relatedCars = allCars.filter(
     (c) =>
       c.showroomId === car.showroomId &&
       c.id !== car.id &&
       c.status === "available"
   );
 
-  const relatedPagination = paginate(relatedAll, page, 8);
+  const relatedPagination = paginate(relatedCars, page, 8);
 
-  /* ================= ALL CARS ================= */
+  /* ======================================================
+     ALL AVAILABLE CARS
+  ====================================================== */
 
   const availableCars = allCars.filter(
     (c) => c.status === "available"
@@ -133,13 +148,17 @@ export default async function MobilDetailPage({
 
   const allCarsPagination = paginate(filteredCars, page, 12);
 
-  /* ================= CANONICAL URL ================= */
+  /* ======================================================
+     SEO URL
+  ====================================================== */
 
   const carUrl = buildCarUrl(car);
 
   return (
     <>
-      {/* PRELOAD LCP IMAGE */}
+      {/* ======================================================
+         PRELOAD IMAGE (LCP BOOST)
+      ====================================================== */}
 
       <link
         rel="preload"
@@ -148,7 +167,9 @@ export default async function MobilDetailPage({
         fetchPriority="high"
       />
 
-      {/* ================= JSON-LD VEHICLE ================= */}
+      {/* ======================================================
+         JSON-LD VEHICLE SCHEMA
+      ====================================================== */}
 
       <script
         type="application/ld+json"
@@ -174,6 +195,10 @@ export default async function MobilDetailPage({
           }),
         }}
       />
+
+      {/* ======================================================
+         CLIENT PAGE
+      ====================================================== */}
 
       <Suspense fallback={<MobilDetailSkeleton />}>
         <MobilDetailClient

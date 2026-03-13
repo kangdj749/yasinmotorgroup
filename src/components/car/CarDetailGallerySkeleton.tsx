@@ -1,18 +1,37 @@
 export default function CarDetailGallerySkeleton() {
   return (
-    <section className="space-y-3">
+    <section
+      className="
+        space-y-2
+      "
+    >
       {/* MAIN IMAGE */}
-      <div className="relative aspect-square rounded-2xl skeleton" />
+      <div
+        className="
+          relative
+          aspect-[4/3]
+          rounded-xl
+          skeleton
+        "
+      />
 
-      {/* THUMB SLIDER */}
-      <div className="flex gap-2 overflow-x-auto">
+      {/* THUMBNAIL STRIP */}
+      <div
+        className="
+          flex
+          gap-1.5
+          overflow-x-auto
+          pb-1
+        "
+      >
         {Array.from({ length: 5 }).map((_, i) => (
           <div
             key={i}
             className="
-              h-16 w-16
+              h-14 w-14
               flex-shrink-0
-              rounded-xl skeleton
+              rounded-lg
+              skeleton
             "
           />
         ))}
