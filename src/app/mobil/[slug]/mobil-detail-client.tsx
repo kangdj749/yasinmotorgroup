@@ -58,11 +58,12 @@ export default function MobilDetailClient({
 
   /* ================= SALES LIST ================= */
   const salesList = [
-    { name: "Afnan", phone: "6281312421998" },
-    { name: "Vendra", phone: "62882000134517" },
     { name: "Rima", phone: "6282379296878" },
-    { name: "Rafli", phone: "6287821733684" },
     { name: "Agus", phone: "6289686665682" },
+    { name: "Vendra", phone: "62882000134517" },
+    { name: "Rafli", phone: "6287821733684" },
+    { name: "Afnan", phone: "6281312421998" },
+    
   ];
 
   /* ================= IMAGE SOURCE ================= */
