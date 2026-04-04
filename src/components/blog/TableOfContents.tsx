@@ -17,9 +17,10 @@ export default function TableOfContents({ items }: TableOfContentsProps) {
     <aside
       className="
       mb-8
-      rounded-[var(--radius-lg)]
+      rounded-lg
       border
-      border-[rgb(var(--color-border))]
+      border-[rgb(var(--border))]
+      
       bg-[rgb(var(--color-surface))]
       p-4
       shadow-[var(--shadow-soft)]

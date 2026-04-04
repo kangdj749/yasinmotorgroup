@@ -15,6 +15,7 @@ import {
   ChevronRight,
   ArrowLeft,
   ZoomIn,
+  X,
 } from "lucide-react";
 import { Car } from "@/types/car";
 import CarCard from "@/components/car/car-card";
@@ -24,13 +25,11 @@ import { cloudinaryImage } from "@/lib/utils/cloudinary";
 
 type Props = {
   car: Car;
-
   related: Car[];
   relatedPagination: {
     currentPage: number;
     totalPages: number;
   };
-
   allCars: Car[];
   brands: string[];
   allCarsPagination: {
@@ -51,8 +50,20 @@ export default function MobilDetailClient({
   const [zoom, setZoom] = useState(false);
   const [showFullDesc, setShowFullDesc] = useState(false);
 
+  // ✅ MODAL STATE
+  const [showModal, setShowModal] = useState(false);
+
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
+
+  /* ================= SALES LIST ================= */
+  const salesList = [
+    { name: "Afnan", phone: "6281312421998" },
+    { name: "Vendra", phone: "62882000134517" },
+    { name: "Rima", phone: "6282379296878" },
+    { name: "Rafli", phone: "6287821733684" },
+    { name: "Agus", phone: "6289686665682" },
+  ];
 
   /* ================= IMAGE SOURCE ================= */
   const images = useMemo<string[]>(() => {
@@ -61,19 +72,17 @@ export default function MobilDetailClient({
     );
   }, [car.image, car.gallery]);
 
-  /* ================= UX SCROLL RESTORE ================= */
   useLayoutEffect(() => {
     window.scrollTo({ top: 0, behavior: "instant" });
   }, [car.id]);
 
-  /* ================= RESET STATE SAAT GANTI MOBIL ================= */
   useEffect(() => {
     setActiveIndex(0);
     setZoom(false);
     setShowFullDesc(false);
   }, [car.id]);
 
-  /* ================= GTM DATA LAYER VIEW MOBIL ================= */
+  /* ================= GTM VIEW ================= */
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -96,12 +105,10 @@ export default function MobilDetailClient({
   const nextImage = () =>
     setActiveIndex((p) => (p < images.length - 1 ? p + 1 : 0));
 
-  /* ================= WHATSAPP ================= */
-
-  const waNumber = process.env.NEXT_PUBLIC_WA_NUMBER || "628123456789";
-
-  const waMessage = encodeURIComponent(
-    `Halo admin 👋
+  /* ================= WA MESSAGE ================= */
+  const buildWaLink = (phone: string) => {
+    const message = encodeURIComponent(
+      `Halo admin 👋
 Saya tertarik dengan unit berikut:
 
 🚗 ${car.title}
@@ -114,13 +121,13 @@ Link unit:
 ${typeof window !== "undefined" ? window.location.href : ""}
 
 Mohon info lebih lanjut 🙏`
-  );
+    );
 
-  const waLink = `https://wa.me/${waNumber}?text=${waMessage}`;
+    return `https://wa.me/${phone}?text=${message}`;
+  };
 
-  /* ================= WA CLICK TRACKING ================= */
-
-  const handleWaClick = () => {
+  /* ================= WA CLICK ================= */
+  const handleWaClick = (salesName: string) => {
     if (typeof window === "undefined") return;
 
     window.dataLayer = window.dataLayer || [];
@@ -131,6 +138,7 @@ Mohon info lebih lanjut 🙏`
       car_name: car.title,
       brand: car.brand,
       showroom: car.showroomName,
+      sales_name: salesName, // ✅ BONUS TRACKING
     });
   };
 
@@ -151,7 +159,7 @@ Mohon info lebih lanjut 🙏`
           </Link>
         </div>
 
-        {/* IMAGE UTAMA */}
+        {/* IMAGE */}
         <div
           className="relative w-full aspect-square overflow-hidden mt-4"
           onTouchStart={(e) =>
@@ -159,7 +167,6 @@ Mohon info lebih lanjut 🙏`
           }
           onTouchEnd={(e) => {
             touchEndX.current = e.changedTouches[0].screenX;
-
             if (touchStartX.current - touchEndX.current > 50) nextImage();
             if (touchEndX.current - touchStartX.current > 50) prevImage();
           }}
@@ -168,159 +175,81 @@ Mohon info lebih lanjut 🙏`
             src={cloudinaryImage(images[activeIndex], "detail")}
             alt={car.title}
             fill
-            sizes="(max-width: 768px) 100vw, 720px"
-            placeholder="blur"
-            blurDataURL="/blur-car.png"
-            decoding="async"
-            loading="lazy"
-            unoptimized
-            className={`object-cover transition-transform duration-300 ${
-              zoom ? "scale-150 cursor-zoom-out" : "cursor-zoom-in"
-            }`}
+            className={`object-cover ${
+              zoom ? "scale-150" : ""
+            } transition`}
             onClick={() => setZoom((p) => !p)}
           />
 
           <div className="absolute bottom-3 right-3 bg-black/40 text-white p-2 rounded-full">
             <ZoomIn className="w-4 h-4" />
           </div>
-
-          {images.length > 1 && (
-            <>
-              <button
-                onClick={prevImage}
-                className="absolute left-3 top-1/2 -translate-y-1/2 z-10 bg-black/40 text-white p-2 rounded-full"
-              >
-                <ChevronLeft />
-              </button>
-
-              <button
-                onClick={nextImage}
-                className="absolute right-3 top-1/2 -translate-y-1/2 z-10 bg-black/40 text-white p-2 rounded-full"
-              >
-                <ChevronRight />
-              </button>
-            </>
-          )}
         </div>
-
-        {/* GALERI */}
-        {images.length > 1 && (
-          <div className="px-4 py-3 bg-muted/40">
-            <div className="flex gap-3 overflow-x-auto no-scrollbar">
-              {images.map((img, i) => (
-                <button
-                  key={img + i}
-                  onClick={() => {
-                    setActiveIndex(i);
-                    setZoom(false);
-                  }}
-                  className={`relative w-20 aspect-square shrink-0 rounded-xl overflow-hidden border-2 ${
-                    activeIndex === i ? "border-primary" : "border-border"
-                  }`}
-                >
-                  <Image
-                    src={cloudinaryImage(img, "thumb")}
-                    alt=""
-                    fill
-                    sizes="80px"
-                    loading="lazy"
-                    decoding="async"
-                    placeholder="blur"
-                    blurDataURL="/blur-car.png"
-                    unoptimized
-                    className="object-cover"
-                  />
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* CONTENT */}
         <div className="p-6 space-y-6">
-          <div>
-            <h1 className="text-2xl font-bold">{car.title}</h1>
-
-            {car.showroomName && (
-              <p className="text-sm text-muted-foreground">
-                {car.showroomName}
-              </p>
-            )}
-          </div>
-
-          <div className="space-y-1">
-            <p className="text-primary font-bold text-2xl">
-              DP Rp {car.dp.toLocaleString("id-ID")}
-            </p>
-
-            <p className="text-sm">
-              Angsuran Rp {car.installment.toLocaleString("id-ID")} / bulan
-            </p>
-
-            <p className="text-xs text-muted-foreground">
-              Tenor {car.tenor}
-            </p>
-          </div>
-
-          {/* DESKRIPSI */}
-          <div>
-            <h2 className="font-semibold text-primary mb-2">
-              Deskripsi Mobil
-            </h2>
-
-            <p
-              className={`text-sm leading-relaxed whitespace-pre-line ${
-                !showFullDesc ? "line-clamp-6" : ""
-              }`}
-            >
-              {car.description || "Tidak ada deskripsi."}
-            </p>
-
-            {car.description && car.description.length > 200 && (
-              <button
-                onClick={() => setShowFullDesc((p) => !p)}
-                className="text-primary text-sm mt-2"
-              >
-                {showFullDesc ? "Sembunyikan" : "Lihat Selengkapnya"}
-              </button>
-            )}
-          </div>
+          <h1 className="text-2xl font-bold">{car.title}</h1>
         </div>
       </div>
 
-      {/* CTA WHATSAPP */}
+      {/* CTA */}
       <div className="pt-4">
-        <a
+        <button
           id="btn-wa"
-          href={waLink}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={handleWaClick}
+          onClick={() => setShowModal(true)}
           className="w-full flex items-center justify-center gap-3 py-3 rounded-2xl bg-green-500 hover:bg-green-600 text-white font-semibold shadow-lg transition"
         >
           TANYA UNIT DI WHATSAPP
-        </a>
+        </button>
 
         <p className="text-xs text-muted-foreground text-center mt-2">
-          Team TM akan membalas langsung
+          Pilih sales untuk melanjutkan
         </p>
       </div>
+
+      {/* ================= MODAL ================= */}
+      {showModal && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-white w-full sm:max-w-md rounded-t-3xl sm:rounded-3xl p-5 space-y-4 animate-in fade-in slide-in-from-bottom">
+
+            {/* HEADER */}
+            <div className="flex justify-between items-center">
+              <h3 className="font-semibold text-lg">
+                Pilih Sales
+              </h3>
+              <button onClick={() => setShowModal(false)}>
+                <X />
+              </button>
+            </div>
+
+            {/* LIST SALES */}
+            <div className="space-y-3">
+              {salesList.map((s) => (
+                <a
+                  key={s.phone}
+                  href={buildWaLink(s.phone)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => handleWaClick(s.name)}
+                  className="block w-full text-center py-3 rounded-xl bg-green-500 text-white font-medium hover:bg-green-600 transition"
+                >
+                  {s.name}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* RELATED */}
       <div className="max-w-6xl mx-auto px-2 space-y-4">
         <h2 className="font-semibold">Mobil Lain di Showroom Ini</h2>
 
-        {related.length === 0 ? (
-          <p className="text-sm text-muted-foreground">
-            Belum ada unit lain.
-          </p>
-        ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-            {related.map((c) => (
-              <CarCard key={c.id} car={c} />
-            ))}
-          </div>
-        )}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+          {related.map((c) => (
+            <CarCard key={c.id} car={c} />
+          ))}
+        </div>
 
         {allCarsPagination.totalPages > 1 && (
           <Pagination

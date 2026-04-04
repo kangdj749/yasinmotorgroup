@@ -56,7 +56,7 @@ export default async function HomePage({
           </p>
         </div>
 
-        {/* CTA */}
+        {/* CTA 
         <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
           <a
             href="https://wa.me/6282379296878"
@@ -73,7 +73,7 @@ export default async function HomePage({
             shadow-sm
           "
           >
-            {/* WA ICON */}
+            {/* WA ICON 
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 32 32"
@@ -99,7 +99,7 @@ export default async function HomePage({
             </span>
           </a>
 
-          {/* NUMBER */}
+          {/* NUMBER 
           <div className="text-[11px] sm:text-xs text-muted-foreground">
             <div className="font-medium text-foreground">
               0823-7929-6878
@@ -110,7 +110,7 @@ export default async function HomePage({
               <span>Akun WhatsApp Bisnis</span>
             </div>
           </div>
-        </div>
+        </div> */}
       </header>
 
       {/* ================= PROMO ================= */}
