@@ -160,7 +160,7 @@ Mohon info lebih lanjut 🙏`
           </Link>
         </div>
 
-        {/* IMAGE */}
+        {/* IMAGE UTAMA */}
         <div
           className="relative w-full aspect-square overflow-hidden mt-4"
           onTouchStart={(e) =>
@@ -168,6 +168,7 @@ Mohon info lebih lanjut 🙏`
           }
           onTouchEnd={(e) => {
             touchEndX.current = e.changedTouches[0].screenX;
+
             if (touchStartX.current - touchEndX.current > 50) nextImage();
             if (touchEndX.current - touchStartX.current > 50) prevImage();
           }}
@@ -176,20 +177,123 @@ Mohon info lebih lanjut 🙏`
             src={cloudinaryImage(images[activeIndex], "detail")}
             alt={car.title}
             fill
-            className={`object-cover ${
-              zoom ? "scale-150" : ""
-            } transition`}
+            sizes="(max-width: 768px) 100vw, 720px"
+            placeholder="blur"
+            blurDataURL="/blur-car.png"
+            decoding="async"
+            loading="lazy"
+            unoptimized
+            className={`object-cover transition-transform duration-300 ${
+              zoom ? "scale-150 cursor-zoom-out" : "cursor-zoom-in"
+            }`}
             onClick={() => setZoom((p) => !p)}
           />
 
           <div className="absolute bottom-3 right-3 bg-black/40 text-white p-2 rounded-full">
             <ZoomIn className="w-4 h-4" />
           </div>
+
+          {images.length > 1 && (
+            <>
+              <button
+                onClick={prevImage}
+                className="absolute left-3 top-1/2 -translate-y-1/2 z-10 bg-black/40 text-white p-2 rounded-full"
+              >
+                <ChevronLeft />
+              </button>
+
+              <button
+                onClick={nextImage}
+                className="absolute right-3 top-1/2 -translate-y-1/2 z-10 bg-black/40 text-white p-2 rounded-full"
+              >
+                <ChevronRight />
+              </button>
+            </>
+          )}
         </div>
+
+        {/* GALERI */}
+        {images.length > 1 && (
+          <div className="px-4 py-3 bg-muted/40">
+            <div className="flex gap-3 overflow-x-auto no-scrollbar">
+              {images.map((img, i) => (
+                <button
+                  key={img + i}
+                  onClick={() => {
+                    setActiveIndex(i);
+                    setZoom(false);
+                  }}
+                  className={`relative w-20 aspect-square shrink-0 rounded-xl overflow-hidden border-2 ${
+                    activeIndex === i ? "border-primary" : "border-border"
+                  }`}
+                >
+                  <Image
+                    src={cloudinaryImage(img, "thumb")}
+                    alt=""
+                    fill
+                    sizes="80px"
+                    loading="lazy"
+                    decoding="async"
+                    placeholder="blur"
+                    blurDataURL="/blur-car.png"
+                    unoptimized
+                    className="object-cover"
+                  />
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* CONTENT */}
         <div className="p-6 space-y-6">
-          <h1 className="text-2xl font-bold">{car.title}</h1>
+          <div>
+            <h1 className="text-2xl font-bold">{car.title}</h1>
+
+            {car.showroomName && (
+              <p className="text-sm text-muted-foreground">
+                {car.showroomName}
+              </p>
+            )}
+          </div>
+
+          <div className="space-y-1">
+            <p className="text-primary font-bold text-2xl">
+              DP Rp {car.dp.toLocaleString("id-ID")}
+            </p>
+
+            <p className="text-sm">
+              Angsuran Rp {car.installment.toLocaleString("id-ID")} / bulan
+            </p>
+
+            <p className="text-xs text-muted-foreground">
+              Tenor {car.tenor}
+            </p>
+          </div>
+
+          {/* DESKRIPSI */}
+          <div>
+            <h2 className="font-semibold text-primary mb-2">
+              Deskripsi Mobil
+            </h2>
+
+            <p
+              className={`text-sm leading-relaxed whitespace-pre-line ${
+                !showFullDesc ? "line-clamp-6" : ""
+              }`}
+            >
+              {car.description || "Tidak ada deskripsi."}
+            </p>
+
+            {car.description && car.description.length > 200 && (
+              <button
+                onClick={() => setShowFullDesc((p) => !p)}
+                className="text-primary text-sm mt-2"
+              >
+                {showFullDesc ? "Sembunyikan" : "Lihat Selengkapnya"}
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
