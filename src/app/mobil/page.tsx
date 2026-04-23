@@ -10,6 +10,7 @@ import PaginationSkeleton from "@/components/home/PaginationSkeleton";
 
 import { getAllCars } from "@/lib/data/cars";
 import { buildCarUrl } from "@/lib/routes/car";
+import SearchAutocomplete from "@/components/SearchAutocomplete";
 
 /* ================= SEO METADATA ================= */
 export const metadata: Metadata = {
@@ -120,6 +121,7 @@ export default async function MobilPage({ searchParams }: Props) {
           </p>
         </section>
 
+       
         {/* ================= BRAND FILTER ================= */}
         <Suspense fallback={<BrandTabsSkeleton />}>
           <BrandTabs brands={brands} />

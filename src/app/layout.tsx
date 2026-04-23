@@ -5,6 +5,9 @@ import Script from "next/script";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import MobileBottomNav from "@/components/MobileBottomNav";
+import { getAllCars } from "@/lib/data/cars";
+
+const cars = await getAllCars();
 
 export const metadata: Metadata = {
   title: {
@@ -15,6 +18,8 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({
+
+  
   children,
 }: {
   children: React.ReactNode;
@@ -50,7 +55,13 @@ export default function RootLayout({
         </noscript>
 
         {/* GLOBAL NAVBAR */}
-        <Navbar />
+  
+        <Navbar
+          cars={cars.map((c) => ({
+            id: c.id,
+            title: c.title,
+          }))}
+        />
 
         {/* PAGE CONTENT */}
         <main>{children}</main>

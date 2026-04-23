@@ -12,12 +12,14 @@ import PaginationSkeleton from "@/components/home/PaginationSkeleton";
 
 import PromoSection from "@/components/promo/PromoSection";
 import PromoDetailSkeleton from "@/components/promo/PromoDetailSkeleton";
+import { filterCars } from "@/lib/data/filterCars";
 
 /* ISR refresh */
 export const revalidate = 300;
 
 type SearchParams = {
   brand?: string;
+  
   page?: string;
 };
 
@@ -32,6 +34,7 @@ export default async function HomePage({
   const page = Number(searchParams.page) || 1;
 
   const brands = Array.from(new Set(allCars.map((c) => c.brand)));
+
 
   return (
     <section
@@ -119,6 +122,8 @@ export default async function HomePage({
       </Suspense>
 
       {/* ================= BRAND FILTER ================= */}
+
+            
       <Suspense fallback={<BrandTabsSkeleton />}>
         <BrandTabs brands={brands} />
       </Suspense>

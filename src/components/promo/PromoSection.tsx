@@ -5,7 +5,7 @@ import { Car } from "@/types/car";
 
 export default async function PromoSection() {
   const data = await getActivePromo();
-  console.log("PROMO DATA:", data);
+  
 
   // ⛑️ JANGAN SILENT FAIL
   if (!data) {

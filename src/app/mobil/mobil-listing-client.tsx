@@ -5,6 +5,10 @@ import { CarCard } from "@/components/car";
 
 type Props = {
   cars: Car[];
+  brand?: string;
+  model?: string;
+  search?: string;
+  page?: number;
 };
 
 export default function MobilListingClient(

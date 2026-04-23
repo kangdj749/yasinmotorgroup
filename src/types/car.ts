@@ -14,6 +14,7 @@ export type Car = {
   description: string;
 
   brand: string;        // Toyota
+  model?: string; // ✅ TAMBAH INI
 
   showroomId: string;   // bandung-1  (RELATION KEY)
   showroomName?: string; // Bandung Barat (DISPLAY / SEO)
